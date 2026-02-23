@@ -62,6 +62,13 @@
   --anim-distance: 14px;
 
   --card-media-h: clamp(150px, 18vw, 180px);
+
+  /* Backglow azul (usa el color primario del tema) */
+  --blue-glow: color-mix(in srgb, var(--c-primary) 42%, transparent);
+  --blue-glow-soft: color-mix(in srgb, var(--c-primary) 26%, transparent);
+
+  /* Contorno sutil para cards */
+  --card-outline: color-mix(in srgb, var(--c-primary) 22%, transparent);
 }
 
 
@@ -100,6 +107,13 @@ body {
   position: relative;
   z-index: 0;
   isolation: isolate;
+}
+
+/* Reduce la intensidad del glow en secciones oscuras */
+.section--dark {
+  --blue-glow: color-mix(in srgb, var(--c-primary) 28%, transparent);
+  --blue-glow-soft: color-mix(in srgb, var(--c-primary) 16%, transparent);
+  --card-outline: color-mix(in srgb, var(--c-primary) 14%, transparent);
 }
 
 /* Motion graphics (sutil) — se desactiva si el usuario prefiere menos movimiento */
@@ -430,6 +444,7 @@ a {
   position: relative;
   padding: 4rem 0 3.5rem;
   color: var(--c-white);
+  text-align: left;
 }
 
 .hero__eyebrow {
@@ -482,25 +497,7 @@ a {
   display: flex;
   flex-wrap: wrap;
   gap: .75rem;
-}
-
-.hero__scroll {
-  margin-top: 2.3rem;
-  display: inline-flex;
-  gap: .5rem;
-  align-items: center;
-  text-decoration: none;
-  opacity: 0.9;
-  font-weight: 600;
-}
-
-.hero__scroll::after {
-  content: "";
-  width: 10px;
-  height: 10px;
-  border-right: 2px solid rgba(255, 255, 255, 0.9);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.9);
-  transform: rotate(45deg) translateY(-1px);
+  justify-content: flex-start;
 }
 
 /* ----------------------
@@ -664,7 +661,10 @@ main .section + .section {
   overflow: hidden;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.10);
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--card-outline);
+  filter:
+    drop-shadow(0 22px 50px var(--blue-glow))
+    drop-shadow(0 10px 24px var(--blue-glow-soft));
 }
 
 .featured-card__media {
@@ -834,7 +834,10 @@ main .section + .section {
   border: 1px solid var(--c-border-soft);
   border-radius: var(--radius-lg);
   padding: 1.2rem;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sm), 0 0 0 1px var(--card-outline);
+  filter:
+    drop-shadow(0 18px 38px var(--blue-glow))
+    drop-shadow(0 8px 18px var(--blue-glow-soft));
 }
 
 .card--soft {
@@ -990,6 +993,12 @@ main .section + .section {
   box-shadow: var(--shadow-md);
 }
 
+.location__map {
+  filter:
+    drop-shadow(0 18px 40px var(--blue-glow))
+    drop-shadow(0 9px 20px var(--blue-glow-soft));
+}
+
 @media (min-width: 900px) {
   .location {
     grid-template-columns: 0.9fr 1.1fr;
@@ -1007,8 +1016,11 @@ main .section + .section {
   border: 1px solid var(--c-border-soft);
   border-radius: var(--radius-lg);
   padding: 1.15rem;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sm), 0 0 0 1px var(--card-outline);
   transition: transform 180ms var(--ease), box-shadow 180ms var(--ease), border-color 180ms var(--ease);
+  filter:
+    drop-shadow(0 18px 38px var(--blue-glow))
+    drop-shadow(0 8px 18px var(--blue-glow-soft));
 }
 
 .icon-card:hover {
@@ -1063,9 +1075,12 @@ main .section + .section {
   border-radius: var(--radius-lg);
   background: var(--c-surface);
   border: 1px solid var(--c-border-soft);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sm), 0 0 0 1px var(--card-outline);
   color: var(--c-text);
   transition: transform 180ms var(--ease), box-shadow 180ms var(--ease);
+  filter:
+    drop-shadow(0 18px 40px var(--blue-glow))
+    drop-shadow(0 9px 20px var(--blue-glow-soft));
 }
 
 .sermon-card:hover {
@@ -1258,67 +1273,6 @@ html.is-modal-open {
   width: 100%;
   aspect-ratio: 16 / 9;
   background: var(--c-black);
-}
-
-/* ----------------------
-   Eventos
----------------------- */
-
-.event-card {
-  display: grid;
-  grid-template-columns: 84px 1fr;
-  gap: .9rem;
-  align-items: center;
-  background: var(--c-surface);
-  border: 1px solid var(--c-border-soft);
-  border-radius: var(--radius-lg);
-  padding: 1rem;
-  box-shadow: var(--shadow-sm);
-  transition: transform 180ms var(--ease), box-shadow 180ms var(--ease);
-}
-
-.event-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.event-card__date {
-  border-radius: 18px;
-  background: linear-gradient(135deg, rgba(28, 141, 182, 0.15), rgba(15, 61, 94, 0.12));
-  border: 1px solid rgba(28, 141, 182, 0.22);
-  display: grid;
-  place-items: center;
-  padding: .8rem .6rem;
-  text-align: center;
-}
-
-.event-card__day {
-  font-weight: 800;
-  font-size: 1.6rem;
-  line-height: 1;
-  color: var(--c-text);
-}
-
-.event-card__month {
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  font-size: .82rem;
-  color: var(--c-accent);
-}
-
-.event-card__title {
-  margin: 0 0 .25rem;
-  font-size: 1.12rem;
-}
-
-.event-card__text {
-  margin: 0;
-  color: var(--c-muted);
-}
-
-.event-card__meta {
-  margin: .5rem 0 0;
-  color: var(--c-muted);
 }
 
 /* ----------------------
