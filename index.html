@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1C8DB6" />
+
+    <title>Iglesia Cristiana Congregacional de Mazatlán | Bienvenidos</title>
+    <meta
+      name="description"
+      content="Iglesia Cristiana Congregacional de Mazatlán: un lugar para crecer en fe y comunidad. Conoce quiénes somos, horarios, ministerios, sermones y eventos."
+    />
+    <meta name="robots" content="index,follow" />
+
+    <!-- Open Graph (básico) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:title" content="Iglesia Cristiana Congregacional de Mazatlán" />
+    <meta
+      property="og:description"
+      content="Un lugar para crecer en fe y comunidad. Horarios, ministerios, sermones y eventos."
+    />
+    <!-- TODO: Actualiza el dominio real cuando configures GitHub Pages + dominio personalizado -->
+    <meta property="og:url" content="https://tu-dominio-aqui.example/" />
+    <meta property="og:image" content="images/og-cover.svg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Performance: Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="preload" as="image" href="images/heroimage.jpg" />
+
+    <link rel="icon" href="images/ICCMLogo.jpg" type="image/jpeg" />
+    <link rel="stylesheet" href="css/styles.css" />
+
+    <!-- Datos estructurados (SEO) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Church",
+        "name": "Iglesia Cristiana Congregacional de Mazatlán",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Mazatlán",
+          "addressRegion": "Sinaloa",
+          "addressCountry": "MX"
+        },
+        "url": "https://tu-dominio-aqui.example/",
+        "sameAs": [
+          "https://www.facebook.com/iglesiacristianacongregacionaldemazatlanoficial/photos?locale=es_LA",
+          "https://www.instagram.com/iglesiacongregacionalmzt/"
+        ],
+        "description": "Un lugar para crecer en fe y comunidad"
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#inicio">Saltar al contenido</a>
+
+    <!-- Navbar (sticky, transparente -> sólida al hacer scroll) -->
+    <header class="site-header" id="top">
+      <nav class="nav" aria-label="Navegación principal">
+        <div class="container nav__inner">
+          <a class="nav__brand" href="#inicio" aria-label="Ir a inicio">
+            <img
+              class="nav__logo"
+              src="images/ICCMLogo.jpg"
+              alt="Logo de la Iglesia Cristiana Congregacional de Mazatlán"
+              width="44"
+              height="44"
+            />
+            <span class="nav__title">ICCM Mazatlán</span>
+          </a>
+
+          <button
+            class="nav__toggle"
+            type="button"
+            aria-label="Abrir menú"
+            aria-controls="navMenu"
+            aria-expanded="false"
+          >
+            <span class="nav__toggle-lines" aria-hidden="true"></span>
+          </button>
+
+          <div class="nav__menu" id="navMenu">
+            <ul class="nav__links">
+              <li><a class="nav__link" href="#inicio">Inicio</a></li>
+              <li><a class="nav__link" href="#quienes">Quiénes Somos</a></li>
+              <li><a class="nav__link" href="#horarios">Horarios</a></li>
+              <li><a class="nav__link" href="#ministerios">Ministerios</a></li>
+              <li><a class="nav__link" href="#sermones">Sermones</a></li>
+              <li><a class="nav__link" href="#eventos">Eventos</a></li>
+              <li><a class="nav__link" href="#contacto">Redes</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Hero (pantalla completa) -->
+      <section class="hero" id="inicio" aria-label="Sección principal">
+        <div class="hero__bg" role="img" aria-label="Imagen de fondo de la iglesia"></div>
+        <div class="hero__overlay" aria-hidden="true"></div>
+
+        <div class="container hero__content">
+          <p class="hero__eyebrow animate animate--up delay-1">Bienvenidos</p>
+          <h1 class="hero__headline animate animate--up delay-2">Iglesia Cristiana Congregacional de Mazatlán</h1>
+          <p class="hero__subhead animate animate--up delay-3">Un lugar para crecer en fe y comunidad</p>
+
+          <div class="hero__actions">
+            <a class="btn btn--primary animate animate--up delay-4" href="#horarios">Visítanos</a>
+            <a class="btn btn--ghost animate animate--up delay-5" href="#sermones">Ver Sermones</a>
+          </div>
+
+          <a class="hero__scroll animate animate--in delay-6" href="#quienes" aria-label="Bajar a Quiénes Somos">
+            <span aria-hidden="true">Desliza</span>
+          </a>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <!-- Quiénes Somos -->
+      <section class="section" id="quienes">
+        <div class="container grid-2">
+          <div class="media animate animate--left">
+            <img
+              src="images/section-placeholder.svg"
+              alt="Comunidad reunida en un ambiente acogedor"
+              loading="lazy"
+              width="720"
+              height="540"
+            />
+          </div>
+
+          <div class="content animate animate--right">
+            <h2 class="section__title">Quiénes Somos</h2>
+            <p class="section__lead">
+              Somos una comunidad centrada en Cristo, comprometida con la Biblia y enfocada en amar a Dios y a las
+              personas con claridad, calidez y propósito.
+            </p>
+
+            <div class="stack">
+              <div class="card card--soft">
+                <h3 class="card__title">Misión</h3>
+                <p class="card__text">Guiar a las personas a conocer a Jesús y crecer como discípulos en comunidad.</p>
+              </div>
+
+              <div class="card card--soft">
+                <h3 class="card__title">Visión</h3>
+                <p class="card__text">
+                  “Ser una iglesia transformada por el poder de Dios para hacer discípulos de Cristo en todas las
+                  naciones.”
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Horarios y Ubicación -->
+      <section class="section section--alt" id="horarios">
+        <div class="container">
+          <div class="section__head animate animate--up">
+            <h2 class="section__title">Horarios y Ubicación</h2>
+            <p class="section__lead">Te esperamos. Ven como eres.</p>
+          </div>
+
+          <div class="grid-3">
+            <article class="card card--hover animate animate--up" aria-label="Horario domingo">
+              <h3 class="card__title">Domingo</h3>
+              <p class="card__text"><strong>Celebración:</strong> 11:00 a. m.</p>
+              <p class="card__meta">Servicio familiar</p>
+            </article>
+
+            <article class="card card--hover animate animate--up" aria-label="Horario entre semana">
+              <h3 class="card__title">Entre semana</h3>
+              <p class="card__text"><strong>Oración:</strong> Miércoles 7:00 p. m.</p>
+              <p class="card__meta">Tiempo de intercesión</p>
+            </article>
+
+            <article class="card card--hover animate animate--up" aria-label="Horario grupos pequeños">
+              <h3 class="card__title">Grupos Pequeños</h3>
+              <p class="card__text"><strong>Viernes:</strong> 7:30 p. m.</p>
+              <p class="card__meta">En casas (por zona)</p>
+            </article>
+          </div>
+
+          <div class="location animate animate--up">
+            <div class="location__info">
+              <h3 class="location__title">Dirección</h3>
+              <p class="location__text">
+                Mazatlán, Sinaloa, México
+                <span class="location__hint">(Actualiza la dirección exacta en el código cuando la confirmes.)</span>
+              </p>
+
+              <div class="location__actions">
+                <a
+                  class="btn btn--primary btn--sm"
+                  href="https://www.google.com/maps/search/?api=1&query=Mazatl%C3%A1n%2C%20Sinaloa"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Abrir en Google Maps
+                </a>
+                <a class="btn btn--ghost btn--sm" href="#contacto">Síguenos</a>
+              </div>
+            </div>
+
+            <div class="location__map" aria-label="Mapa">
+              <iframe
+                title="Mapa de Mazatlán"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117781.61519627294!2d-106.46039357570656!3d23.246934390614673!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x869f5364d6f1f78f%3A0x3a7e0f3f9b1d0c7e!2sMazatl%C3%A1n%2C%20Sin.!5e0!3m2!1ses!2smx!4v1739920000000"
+                width="100%"
+                height="360"
+                style="border: 0"
+                allowfullscreen=""
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Ministerios -->
+      <section class="section" id="ministerios">
+        <div class="container">
+          <div class="section__head animate animate--up">
+            <h2 class="section__title">Ministerios</h2>
+            <p class="section__lead">Espacios para crecer, servir y conectar.</p>
+          </div>
+
+          <div class="grid-4">
+            <article class="icon-card animate animate--up">
+              <div class="icon-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 20v-8a5 5 0 0 1 10 0v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  <path d="M9 10a3 3 0 1 0 6 0a3 3 0 0 0-6 0Z" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </div>
+              <h3 class="icon-card__title">Jóvenes</h3>
+              <p class="icon-card__text">Amistad, propósito y fe en una etapa clave.</p>
+            </article>
+
+            <article class="icon-card animate animate--up">
+              <div class="icon-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.65-7 10-7 10Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <h3 class="icon-card__title">Niños</h3>
+              <p class="icon-card__text">Aprenden la verdad de Dios de forma segura y alegre.</p>
+            </article>
+
+            <article class="icon-card animate animate--up">
+              <div class="icon-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 20v-9a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v9" stroke="currentColor" stroke-width="2" />
+                  <path d="M8 7V5a4 4 0 0 1 8 0v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </div>
+              <h3 class="icon-card__title">Adultos</h3>
+              <p class="icon-card__text">Enseñanza bíblica y vida práctica en comunidad.</p>
+            </article>
+
+            <article class="icon-card animate animate--up">
+              <div class="icon-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 12a5 5 0 1 1 10 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  <path d="M4 20a8 8 0 0 1 16 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </div>
+              <h3 class="icon-card__title">Grupos Pequeños</h3>
+              <p class="icon-card__text">Conexión real, cuidado pastoral y oración.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sermones / Último mensaje -->
+      <section class="section section--dark" id="sermones">
+        <div class="container">
+          <div class="section__head section__head--center animate animate--up">
+            <h2 class="section__title section__title--light">Último mensaje</h2>
+            <p class="section__lead section__lead--light">Mira el mensaje más reciente y fortalece tu fe.</p>
+          </div>
+
+          <div id="featuredSermon" class="featured-sermon" aria-label="Último mensaje"></div>
+
+          <div class="section__head section__head--split section__head--spaced animate animate--up">
+            <div>
+              <h3 class="section__subtitle">Más mensajes</h3>
+              <p class="section__lead section__lead--light">Los más recientes del canal.</p>
+            </div>
+            <a class="btn btn--ghost btn--sm" id="sermonsMoreBtn" href="#" target="_blank" rel="noreferrer">Ver más</a>
+          </div>
+
+          <div class="grid-3" id="sermonsGrid" aria-label="Lista de sermones"></div>
+          <p class="note" id="sermonsStatus" role="status" aria-live="polite">
+            Cargando los sermones más recientes…
+          </p>
+
+          <noscript>
+            <p class="note">Activa JavaScript para ver los sermones más recientes.</p>
+          </noscript>
+        </div>
+      </section>
+
+      <!-- Eventos -->
+      <section class="section" id="eventos">
+        <div class="container">
+          <div class="section__head animate animate--up">
+            <h2 class="section__title">Eventos</h2>
+            <p class="section__lead">Próximos momentos para conectar y servir.</p>
+          </div>
+
+          <div class="grid-3">
+            <article class="event-card animate animate--up">
+              <div class="event-card__date" aria-label="Fecha: 10 de marzo">
+                <span class="event-card__day">10</span>
+                <span class="event-card__month">MAR</span>
+              </div>
+              <div class="event-card__body">
+                <h3 class="event-card__title">Noche de oración</h3>
+                <p class="event-card__text">Un tiempo para buscar a Dios y fortalecer la unidad.</p>
+                <p class="event-card__meta">7:00 p. m. · Auditorio</p>
+              </div>
+            </article>
+
+            <article class="event-card animate animate--up">
+              <div class="event-card__date" aria-label="Fecha: 24 de marzo">
+                <span class="event-card__day">24</span>
+                <span class="event-card__month">MAR</span>
+              </div>
+              <div class="event-card__body">
+                <h3 class="event-card__title">Convivio de familias</h3>
+                <p class="event-card__text">Comida compartida, juegos y comunidad.</p>
+                <p class="event-card__meta">2:00 p. m. · Patio</p>
+              </div>
+            </article>
+
+            <article class="event-card animate animate--up">
+              <div class="event-card__date" aria-label="Fecha: 7 de abril">
+                <span class="event-card__day">7</span>
+                <span class="event-card__month">ABR</span>
+              </div>
+              <div class="event-card__body">
+                <h3 class="event-card__title">Servicio especial</h3>
+                <p class="event-card__text">Celebración con mensaje y alabanza.</p>
+                <p class="event-card__meta">11:00 a. m. · Auditorio</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contacto -->
+      <section class="section section--alt" id="contacto">
+        <div class="container">
+          <div class="section__head animate animate--up">
+            <h2 class="section__title">Redes</h2>
+            <p class="section__lead">Conéctate con nosotros en Facebook e Instagram.</p>
+          </div>
+
+          <div class="grid-2">
+            <div class="card card--soft animate animate--left">
+              <h3 class="card__title">Redes</h3>
+              <p class="card__text">Síguenos para anuncios, eventos y mensajes. También puedes contactarnos:</p>
+
+              <div class="contact-list" aria-label="Información de contacto">
+                <p class="contact-list__item">
+                  <strong>Correo:</strong>
+                  <a class="contact-list__link" href="mailto:iccm1888@gmail.com">iccm1888@gmail.com</a>
+                </p>
+                <p class="contact-list__item">
+                  <strong>Teléfono:</strong>
+                  <a class="contact-list__link" href="tel:+526699855956">669 985 5956</a>
+                </p>
+              </div>
+
+              <div class="btn-row">
+                <a
+                  class="btn btn--ghost"
+                  href="https://www.facebook.com/iglesiacristianacongregacionaldemazatlanoficial/photos?locale=es_LA"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Facebook
+                </a>
+                <a
+                  class="btn btn--primary"
+                  href="https://www.instagram.com/iglesiacongregacionalmzt/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Instagram
+                </a>
+              </div>
+            </div>
+
+            <div class="contact-side animate animate--right">
+              <div class="card card--hover">
+                <h3 class="card__title">Llamado a la acción</h3>
+                <p class="card__text">¿Es tu primera vez? Nos encantará recibirte este domingo.</p>
+                <a class="btn btn--primary" href="#horarios">Ver horarios</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer__inner">
+        <div class="footer__brand">
+          <img
+            class="footer__logo"
+            src="images/ICCMLogo.jpg"
+            alt="Logo ICCM"
+            width="36"
+            height="36"
+            loading="lazy"
+          />
+          <div>
+            <p class="footer__name">Iglesia Cristiana Congregacional de Mazatlán</p>
+            <p class="footer__meta">Mazatlán, Sinaloa · México</p>
+          </div>
+        </div>
+
+        <nav class="footer__links" aria-label="Enlaces rápidos">
+          <a href="#quienes">Quiénes Somos</a>
+          <a href="#horarios">Horarios</a>
+          <a href="#ministerios">Ministerios</a>
+          <a href="#contacto">Redes</a>
+        </nav>
+
+        <div class="footer__social" aria-label="Redes sociales">
+          <a
+            href="https://www.facebook.com/iglesiacristianacongregacionaldemazatlanoficial/photos?locale=es_LA"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Facebook"
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M14 8h2V5h-2c-2.2 0-4 1.8-4 4v2H8v3h2v7h3v-7h2.2l.8-3H13V9c0-.6.4-1 1-1Z"
+                fill="currentColor"
+              />
+            </svg>
+          </a>
+          <a href="https://www.instagram.com/iglesiacongregacionalmzt/" target="_blank" rel="noreferrer" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M8.5 3h7A5.5 5.5 0 0 1 21 8.5v7A5.5 5.5 0 0 1 15.5 21h-7A5.5 5.5 0 0 1 3 15.5v-7A5.5 5.5 0 0 1 8.5 3Z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M12 16a4 4 0 1 0 0-8a4 4 0 0 0 0 8Z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path d="M17.5 6.5h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="container footer__bottom">
+        <p>© <span id="currentYear"></span> ICCM Mazatlán. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+
+    <!-- Modal de video (YouTube) -->
+    <div class="modal" id="videoModal" aria-hidden="true" role="dialog" aria-label="Reproductor de video">
+      <div class="modal__backdrop" data-modal-close></div>
+      <div class="modal__panel" role="document">
+        <button class="modal__close" type="button" data-modal-close aria-label="Cerrar">Cerrar</button>
+        <div class="modal__frame" id="videoModalFrame" aria-label="Video"></div>
+      </div>
+    </div>
+
+    <script src="js/youtube.js" defer></script>
+    <script src="js/animations.js" defer></script>
+    <script src="js/main.js" defer></script>
+  </body>
+</html>

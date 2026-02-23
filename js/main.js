@@ -1,0 +1,119 @@
+/*
+  ICCM Mazatlán — JavaScript (Vanilla)
+  Funcionalidades:
+  - Navbar sticky + cambio de fondo al hacer scroll
+  - Menú móvil toggle
+  - Smooth scrolling (respetando prefers-reduced-motion)
+  - Animaciones están en /js/animations.js
+  - Año automático en el footer
+*/
+
+(() => {
+  "use strict";
+
+  const nav = document.querySelector(".nav");
+  const toggle = document.querySelector(".nav__toggle");
+  const navMenu = document.getElementById("navMenu");
+  const navLinks = document.querySelectorAll('.nav__link[href^="#"]');
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // --- Año automático en footer
+  const yearEl = document.getElementById("currentYear");
+  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+  // --- Navbar sólido al hacer scroll
+  const setNavScrolled = () => {
+    if (!nav) return;
+    nav.classList.toggle("is-scrolled", window.scrollY > 10);
+  };
+
+  setNavScrolled();
+  window.addEventListener("scroll", setNavScrolled, { passive: true });
+
+  // --- Menú móvil
+  const closeMenu = () => {
+    if (!nav || !toggle) return;
+    nav.classList.remove("is-open");
+    toggle.setAttribute("aria-expanded", "false");
+  };
+
+  const openMenu = () => {
+    if (!nav || !toggle) return;
+    nav.classList.add("is-open");
+    toggle.setAttribute("aria-expanded", "true");
+  };
+
+  if (toggle) {
+    toggle.addEventListener("click", () => {
+      const isOpen = nav?.classList.contains("is-open");
+      if (isOpen) closeMenu();
+      else openMenu();
+    });
+  }
+
+  // Cierra menú al hacer clic en un link
+  navLinks.forEach((link) => {
+    link.addEventListener("click", () => closeMenu());
+  });
+
+  // Cierra menú con Escape
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeMenu();
+  });
+
+  // --- Smooth scrolling (anchor) con offset por navbar
+  // Nota: CSS ya tiene scroll-behavior, pero esto asegura offset y accesibilidad.
+  const navHeight = () => (nav ? nav.getBoundingClientRect().height : 0);
+
+  const smoothScrollToId = (id) => {
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    const y = target.getBoundingClientRect().top + window.scrollY - navHeight();
+
+    if (prefersReducedMotion) {
+      window.scrollTo(0, y);
+      return;
+    }
+
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
+
+  document.addEventListener("click", (event) => {
+    const anchor = event.target.closest('a[href^="#"]');
+    if (!anchor) return;
+
+    const href = anchor.getAttribute("href");
+    if (!href || href === "#") return;
+
+    const id = href.replace("#", "");
+    if (!id) return;
+
+    // Solo intercepta si el destino existe en la página
+    if (!document.getElementById(id)) return;
+
+    event.preventDefault();
+
+    // Actualiza URL sin salto brusco
+    // Nota: en algunos contextos (p.ej. file://) pushState puede fallar.
+    try {
+      history.pushState(null, "", `#${id}`);
+    } catch {
+      // ignore
+    }
+
+    smoothScrollToId(id);
+  });
+
+  // --- Fix: si el usuario recarga con hash, ajusta el offset
+  window.addEventListener("load", () => {
+    const hash = window.location.hash;
+    if (!hash || hash === "#") return;
+    const id = hash.replace("#", "");
+    if (!document.getElementById(id)) return;
+
+    // Pequeño delay para que el layout esté estable
+    setTimeout(() => smoothScrollToId(id), 0);
+  });
+})();
