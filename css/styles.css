@@ -60,6 +60,8 @@
 
   --anim-dur: 700ms;
   --anim-distance: 14px;
+
+  --card-media-h: clamp(150px, 18vw, 180px);
 }
 
 
@@ -867,12 +869,12 @@ main .section + .section {
 
 .card__media {
   width: 100%;
-  height: 160px;
+  height: var(--card-media-h);
   object-fit: cover;
   border-radius: var(--radius-md);
   border: 1px solid var(--c-border-soft);
   background: var(--c-bg-soft);
-  margin: 0 0 .9rem;
+  margin: .65rem 0 .9rem;
 }
 
 .btn {
@@ -1038,7 +1040,7 @@ main .section + .section {
 }
 
 .icon-card__media {
-  margin: .15rem 0 .85rem;
+  margin: .65rem 0 .85rem;
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--c-border-soft);
@@ -1047,7 +1049,7 @@ main .section + .section {
 
 .icon-card__media img {
   width: 100%;
-  height: 140px;
+  height: var(--card-media-h);
   object-fit: cover;
   display: block;
 }
