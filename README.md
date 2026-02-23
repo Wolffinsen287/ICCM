@@ -17,6 +17,8 @@ Esto permite cargar los **6 videos más recientes** sin:
 - Google Cloud
 - Backend / Node / Express
 
+Actualmente el sitio muestra **4**: **1 destacado** ("Último mensaje") + **3** en "Más mensajes".
+
 ## Configuración del canal
 
 Este sitio está configurado para el canal:
@@ -54,6 +56,7 @@ Para dominio personalizado:
 ```
 /index.html
 /css/styles.css
+/js/animations.js
 /js/main.js
 /js/youtube.js
 /images/
