@@ -71,6 +71,11 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + 14px);
+}
+
+body {
+  scroll-behavior: smooth;
 }
 
 /* Asegura que los anchors no queden ocultos detrás del navbar fijo */

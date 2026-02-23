@@ -16,7 +16,8 @@
   const navMenu = document.getElementById("navMenu");
   const navLinks = document.querySelectorAll('.nav__link[href^="#"]');
 
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const prefersReducedMotion = () => reducedMotionQuery.matches;
 
   // --- Año automático en footer
   const yearEl = document.getElementById("currentYear");
@@ -66,18 +67,80 @@
   // Nota: CSS ya tiene scroll-behavior, pero esto asegura offset y accesibilidad.
   const navHeight = () => (nav ? nav.getBoundingClientRect().height : 0);
 
+  const SLOW_SCROLL_DURATION_MS = 1400;
+  let activeScrollRaf = 0;
+
+  const easeInOutCubic = (t) => {
+    if (t < 0.5) return 4 * t * t * t;
+    return 1 - Math.pow(-2 * t + 2, 3) / 2;
+  };
+
+  const setInstantScrollBehavior = () => {
+    const root = document.documentElement;
+    const prevRoot = root.style.scrollBehavior;
+    const prevBody = document.body.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    document.body.style.scrollBehavior = "auto";
+    return () => {
+      root.style.scrollBehavior = prevRoot;
+      document.body.style.scrollBehavior = prevBody;
+    };
+  };
+
+  const animateWindowScrollTo = (targetY, durationMs = SLOW_SCROLL_DURATION_MS) => {
+    if (activeScrollRaf) cancelAnimationFrame(activeScrollRaf);
+
+    const restoreScrollBehavior = setInstantScrollBehavior();
+    const startY = window.scrollY;
+    const deltaY = targetY - startY;
+
+    if (Math.abs(deltaY) < 2) {
+      restoreScrollBehavior();
+      window.scrollTo(0, targetY);
+      return;
+    }
+
+    let startTime = 0;
+    const step = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const t = Math.min(elapsed / durationMs, 1);
+      const eased = easeInOutCubic(t);
+      const y = startY + deltaY * eased;
+
+      try {
+        window.scrollTo({ top: y, behavior: "auto" });
+      } catch {
+        window.scrollTo(0, y);
+      }
+
+      if (t < 1) {
+        activeScrollRaf = requestAnimationFrame(step);
+      } else {
+        activeScrollRaf = 0;
+        restoreScrollBehavior();
+      }
+    };
+
+    activeScrollRaf = requestAnimationFrame(step);
+  };
+
   const smoothScrollToId = (id) => {
     const target = document.getElementById(id);
     if (!target) return;
 
     const y = target.getBoundingClientRect().top + window.scrollY - navHeight();
 
-    if (prefersReducedMotion) {
-      window.scrollTo(0, y);
+    if (prefersReducedMotion()) {
+      try {
+        window.scrollTo({ top: y, behavior: "auto" });
+      } catch {
+        window.scrollTo(0, y);
+      }
       return;
     }
 
-    window.scrollTo({ top: y, behavior: "smooth" });
+    animateWindowScrollTo(y);
   };
 
   document.addEventListener("click", (event) => {
