@@ -613,9 +613,15 @@ a {
   grid-column: 1 / -1;
 }
 
+.visit-strip__sub {
+  margin: .55rem 0 0;
+  color: rgba(255, 255, 255, 0.74);
+  font-weight: 600;
+}
+
 @media (min-width: 900px) {
   .visit-strip {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.25fr 1fr;
     gap: 1.35rem 1.6rem;
     min-height: clamp(260px, 20vw, 380px);
   }
