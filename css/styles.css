@@ -214,15 +214,13 @@ a {
   z-index: 1000;
   background: transparent;
   color: var(--nav-fg);
-  transition: background 200ms var(--ease), box-shadow 200ms var(--ease), backdrop-filter 200ms var(--ease);
+  display: flex;
+  align-items: center;
+  transition: color 200ms var(--ease);
 }
 
 .nav.is-scrolled {
-  background: var(--nav-bg-scrolled);
   color: var(--nav-fg-scrolled);
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--nav-border-scrolled);
 }
 
 .nav__inner {
@@ -231,6 +229,18 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  padding-inline: .75rem;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  border: 1px solid transparent;
+  transition: background 200ms var(--ease), box-shadow 200ms var(--ease), backdrop-filter 200ms var(--ease), border-color 200ms var(--ease);
+}
+
+.nav.is-scrolled .nav__inner {
+  background: var(--nav-bg-scrolled);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(10px);
+  border-color: var(--nav-border-scrolled);
 }
 
 .nav__brand {
@@ -296,9 +306,10 @@ a {
 .nav__menu {
   position: absolute;
   top: calc(var(--nav-h) - 10px);
-  left: 0;
-  right: 0;
-  padding: 0 1rem;
+  left: 50%;
+  width: min(var(--container), calc(100% - 2rem));
+  transform: translateX(-50%);
+  padding: 0;
   pointer-events: none;
 }
 
@@ -383,6 +394,9 @@ a {
 
   .nav__menu {
     position: static;
+    left: auto;
+    width: auto;
+    transform: none;
     padding: 0;
     pointer-events: auto;
   }
