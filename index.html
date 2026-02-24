@@ -95,11 +95,11 @@
           <div class="nav__menu" id="navMenu">
             <ul class="nav__links">
               <li><a class="nav__link" href="#inicio">Inicio</a></li>
-              <li><a class="nav__link" href="#quienes">Quiénes Somos</a></li>
-              <li><a class="nav__link" href="#horarios">Horarios</a></li>
+              <li><a class="nav__link" href="#quienes">Somos ICCM</a></li>
+              <li><a class="nav__link" href="#horarios">Visítanos</a></li>
               <li><a class="nav__link" href="#ministerios">Ministerios</a></li>
               <li><a class="nav__link" href="#sermones">Sermones</a></li>
-              <li><a class="nav__link" href="#contacto">Redes</a></li>
+              <li class="nav__cta"><a class="btn btn--primary btn--sm" href="#horarios">Planifica tu visita</a></li>
             </ul>
           </div>
         </div>
@@ -111,13 +111,15 @@
         <div class="hero__overlay" aria-hidden="true"></div>
 
         <div class="container hero__content">
-          <p class="hero__eyebrow animate animate--up delay-1">Bienvenidos</p>
-          <h1 class="hero__headline animate animate--up delay-2">Iglesia Cristiana Congregacional de Mazatlán</h1>
-          <p class="hero__subhead animate animate--up delay-3">Un lugar para crecer en fe y comunidad</p>
+          <p class="hero__eyebrow animate animate--up delay-1">ICCM · Mazatlán</p>
+          <h1 class="hero__headline animate animate--up delay-2">Bienvenido a ICCM</h1>
+          <p class="hero__subhead animate animate--up delay-3">
+            Una iglesia para acercarte a Jesús, crecer en la Palabra y encontrar comunidad.
+          </p>
 
           <div class="hero__actions">
-            <a class="btn btn--primary animate animate--up delay-4" href="#horarios">Visítanos</a>
-            <a class="btn btn--ghost animate animate--up delay-5" href="#sermones">Ver Sermones</a>
+            <a class="btn btn--primary animate animate--up delay-4" href="#horarios">Planifica tu visita</a>
+            <a class="btn btn--ghost animate animate--up delay-5" href="#sermones">Ver sermones</a>
           </div>
         </div>
       </section>
@@ -138,7 +140,7 @@
           </div>
 
           <div class="content animate animate--right">
-            <h2 class="section__title">Quiénes Somos</h2>
+            <h2 class="section__title">Somos ICCM</h2>
             <p class="section__lead">
               Somos una comunidad centrada en Cristo, comprometida con la Biblia y enfocada en amar a Dios y a las
               personas con claridad, calidez y propósito.
@@ -166,8 +168,30 @@
       <section class="section section--alt" id="horarios">
         <div class="container">
           <div class="section__head animate animate--up">
-            <h2 class="section__title">Horarios y Ubicación</h2>
-            <p class="section__lead">Te esperamos.</p>
+            <h2 class="section__title">Planifica tu visita</h2>
+            <p class="section__lead">Horarios, ubicación y lo esencial para acompañarte en tu primera visita.</p>
+          </div>
+
+          <div class="visit-strip animate animate--up" aria-label="Próximo servicio">
+            <div class="visit-strip__item">
+              <p class="visit-strip__label">Próximo servicio</p>
+              <p class="visit-strip__value">Domingo · 11:00 a. m.</p>
+            </div>
+            <div class="visit-strip__item">
+              <p class="visit-strip__label">Dirección</p>
+              <p class="visit-strip__value">5 de Mayo 1714, Centro · Mazatlán</p>
+            </div>
+            <div class="visit-strip__actions">
+              <a
+                class="btn btn--primary btn--sm"
+                href="https://www.google.com/maps/dir/?api=1&destination=5%20de%20Mayo%201714%2C%20Centro%2C%2082100%20Mazatl%C3%A1n%2C%20Sin.%2C%20M%C3%A9xico"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Cómo llegar
+              </a>
+              <a class="btn btn--ghost btn--sm" href="#contacto">Preguntar</a>
+            </div>
           </div>
 
           <div class="grid-3 grid-3--horarios">
@@ -175,7 +199,7 @@
               <h3 class="card__title">Domingo</h3>
               <img
                 class="card__media"
-                src="images/Domingo.jpg"
+                src="images/Domingo.jpeg"
                 alt="Clase bíblica de adultos"
                 loading="lazy"
                 decoding="async"
@@ -184,21 +208,6 @@
               />
               <p class="card__text"><strong>Clase bíblica (adultos):</strong> 10:00 a. m.</p>
               <p class="card__meta">Estudio bíblico</p>
-            </article>
-
-            <article class="card card--hover animate animate--up" aria-label="Horario domingo - servicio familiar">
-              <h3 class="card__title">Domingo</h3>
-              <img
-                class="card__media"
-                src="images/Domingo.jpg"
-                alt="Servicio familiar dominical"
-                loading="lazy"
-                decoding="async"
-                width="800"
-                height="520"
-              />
-              <p class="card__text"><strong>Servicio familiar:</strong> 11:00 a. m.</p>
-              <p class="card__meta">Celebración</p>
             </article>
 
             <article class="card card--hover animate animate--up" aria-label="Horario entre semana">
@@ -215,40 +224,6 @@
               <p class="card__text"><strong>Oración:</strong> Miércoles 7:00 p. m.</p>
               <p class="card__meta">Tiempo de intercesión</p>
             </article>
-          </div>
-
-          <div class="location animate animate--up">
-            <div class="location__info">
-              <h3 class="location__title">Dirección</h3>
-              <p class="location__text">
-                Mazatlán, Sinaloa, México
-              </p>
-
-              <div class="location__actions">
-                <a
-                  class="btn btn--primary btn--sm"
-                  href="https://www.google.com/maps/dir/?api=1&destination=5%20de%20Mayo%201714%2C%20Centro%2C%2082100%20Mazatl%C3%A1n%2C%20Sin.%2C%20M%C3%A9xico"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Abrir en Google Maps
-                </a>
-                <a class="btn btn--ghost btn--sm" href="#contacto">Síguenos</a>
-              </div>
-            </div>
-
-            <div class="location__map" aria-label="Mapa">
-              <iframe
-                title="Mapa (5 de Mayo 1714, Centro, Mazatlán)"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                src="https://www.google.com/maps?q=5%20de%20Mayo%201714%2C%20Centro%2C%2082100%20Mazatl%C3%A1n%2C%20Sin.%2C%20M%C3%A9xico&output=embed"
-                width="100%"
-                height="360"
-                style="border: 0"
-                allowfullscreen=""
-              ></iframe>
-            </div>
           </div>
         </div>
       </section>
@@ -390,8 +365,8 @@
       <section class="section section--alt" id="contacto">
         <div class="container">
           <div class="section__head animate animate--up">
-            <h2 class="section__title">Redes</h2>
-            <p class="section__lead">Conéctate con nosotros en Facebook e Instagram.</p>
+            <h2 class="section__title">Te esperamos</h2>
+            <p class="section__lead">¿Es tu primera vez? Queremos ayudarte a llegar y sentirte en casa.</p>
           </div>
 
           <div class="grid-2">
@@ -453,9 +428,19 @@
 
             <div class="contact-side animate animate--right">
               <div class="card card--hover">
-                <h3 class="card__title">Llamado a la acción</h3>
-                <p class="card__text">¿Es tu primera vez? Nos encantará recibirte este domingo.</p>
-                <a class="btn btn--primary" href="#horarios">Ver horarios</a>
+                <h3 class="card__title">Planifica tu visita</h3>
+                <p class="card__text">Conoce horarios, ubicación y lo que puedes esperar este domingo.</p>
+                <div class="btn-row">
+                  <a class="btn btn--primary" href="#horarios">Ver horarios</a>
+                  <a
+                    class="btn btn--ghost"
+                    href="https://www.google.com/maps/dir/?api=1&destination=5%20de%20Mayo%201714%2C%20Centro%2C%2082100%20Mazatl%C3%A1n%2C%20Sin.%2C%20M%C3%A9xico"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Cómo llegar
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -482,10 +467,10 @@
         </div>
 
         <nav class="footer__links" aria-label="Enlaces rápidos">
-          <a href="#quienes">Quiénes Somos</a>
-          <a href="#horarios">Horarios</a>
+          <a href="#quienes">Somos ICCM</a>
+          <a href="#horarios">Visítanos</a>
           <a href="#ministerios">Ministerios</a>
-          <a href="#contacto">Redes</a>
+          <a href="#sermones">Sermones</a>
         </nav>
 
         <div class="footer__social" aria-label="Redes sociales">
