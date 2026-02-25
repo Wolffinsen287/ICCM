@@ -100,7 +100,7 @@ section[id] {
 
 body {
   margin: 0;
-  font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: var(--c-text);
   background: var(--c-bg);
   line-height: 1.6;
@@ -561,8 +561,8 @@ a {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(980px 520px at 22% 22%, rgba(28, 141, 182, 0.22), transparent 55%),
-    linear-gradient(120deg, rgba(var(--c-dark-rgb), 0.84), rgba(var(--c-dark-rgb), 0.40));
+    radial-gradient(980px 520px at 22% 22%, rgba(28, 141, 182, 0.18), transparent 56%),
+    linear-gradient(120deg, rgba(var(--c-dark-rgb), 0.66), rgba(var(--c-dark-rgb), 0.22));
   pointer-events: none;
   z-index: 1;
 }
@@ -571,6 +571,7 @@ a {
   position: absolute;
   inset: 0;
   z-index: 0;
+  pointer-events: none;
 }
 
 .visit-strip__video {
@@ -632,14 +633,14 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .visit-strip__bg {
+  .visit-strip__video {
     display: none;
   }
 
   .visit-strip::after {
     background:
       radial-gradient(760px 260px at 15% 0%, rgba(28, 141, 182, 0.18), transparent 60%),
-      linear-gradient(120deg, rgba(var(--c-dark-rgb), 0.74), rgba(var(--c-dark-rgb), 0.46));
+      linear-gradient(120deg, rgba(var(--c-dark-rgb), 0.64), rgba(var(--c-dark-rgb), 0.34));
   }
 }
 
@@ -683,19 +684,12 @@ main .section + .section {
 .section--esperamos {
   position: relative;
   overflow: hidden;
+  background: url("../images/Esperar.jpeg") center / cover no-repeat;
   color: var(--c-on-dark);
 }
 
 .section--esperamos::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("../images/Esperar.jpeg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  transform: scale(1.02);
-  z-index: 0;
+  content: none;
 }
 
 .section--esperamos::after {
@@ -1232,6 +1226,51 @@ main .section + .section {
   display: block;
 }
 
+.min-feature__content {
+  padding: clamp(1.15rem, 2.4vw, 1.9rem);
+  display: grid;
+  gap: .65rem;
+  align-content: center;
+}
+
+.min-feature__title {
+  margin: 0;
+  font-size: clamp(1.85rem, 3.2vw, 2.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.min-feature__meta {
+  margin: 0;
+  color: var(--c-muted);
+  font-weight: 700;
+}
+
+.min-feature__text {
+  margin: .2rem 0 0;
+  color: var(--c-muted);
+  max-width: 62ch;
+}
+
+.min-feature__actions {
+  margin-top: .35rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem;
+}
+
+/* Botón ghost legible sobre fondos claros dentro de ministerios */
+.min-feature .btn--ghost {
+  color: var(--c-primary-dark);
+  background: rgba(28, 141, 182, 0.08);
+  border-color: rgba(28, 141, 182, 0.18);
+}
+
+.min-feature .btn--ghost:hover,
+.min-feature .btn--ghost:focus-visible {
+  background: rgba(28, 141, 182, 0.12);
+}
+
 .min-grid {
   display: grid;
   gap: 1rem;
@@ -1259,7 +1298,37 @@ main .section + .section {
   display: block;
 }
 
+.min-card__content {
+  padding: 1.05rem 1.1rem 1.2rem;
+  display: grid;
+  gap: .35rem;
+}
+
+.min-card__title {
+  margin: 0;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.min-card__meta {
+  margin: 0;
+  color: var(--c-muted);
+  font-weight: 700;
+  font-size: .95rem;
+}
+
+.min-card__text {
+  margin: .1rem 0 0;
+  color: var(--c-muted);
+}
+
 @media (min-width: 900px) {
+  .min-feature {
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: stretch;
+  }
+
   .min-feature__media img {
     height: 100%;
     min-height: 440px;

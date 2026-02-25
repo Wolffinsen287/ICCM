@@ -171,6 +171,23 @@
 
   // --- Fix: si el usuario recarga con hash, ajusta el offset
   window.addEventListener("load", () => {
+    // --- Video de fondo: intenta iniciar reproducción (algunos navegadores lo bloquean si no hay play())
+    if (!prefersReducedMotion()) {
+      const bgVideo = document.querySelector(".visit-strip__video");
+      if (bgVideo && typeof bgVideo.play === "function") {
+        try {
+          const result = bgVideo.play();
+          if (result && typeof result.catch === "function") {
+            result.catch(() => {
+              // Autoplay bloqueado: se queda el poster/fondo estático.
+            });
+          }
+        } catch {
+          // ignore
+        }
+      }
+    }
+
     const hash = window.location.hash;
     if (!hash || hash === "#") return;
     const id = hash.replace("#", "");
