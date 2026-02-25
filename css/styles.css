@@ -679,6 +679,51 @@ main .section + .section {
     var(--c-bg-soft);
 }
 
+/* Sección con imagen de fondo (Te esperamos) */
+.section--esperamos {
+  position: relative;
+  overflow: hidden;
+  color: var(--c-on-dark);
+}
+
+.section--esperamos::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("../images/Esperar.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: scale(1.02);
+  z-index: 0;
+}
+
+.section--esperamos::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1000px 520px at 25% 18%, rgba(28, 141, 182, 0.26), transparent 58%),
+    linear-gradient(120deg, rgba(var(--c-dark-rgb), 0.86), rgba(var(--c-dark-rgb), 0.46));
+  z-index: 1;
+}
+
+.section--esperamos .container {
+  position: relative;
+  z-index: 2;
+}
+
+.section--esperamos .section__title::after {
+  opacity: 0.85;
+}
+
+/* Cards legibles sobre foto */
+.section--esperamos .card--soft,
+.section--esperamos .card--hover {
+  background: rgba(255, 255, 255, 0.90);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
 .section__head {
   margin-bottom: 1.75rem;
 }
