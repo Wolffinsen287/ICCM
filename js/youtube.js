@@ -26,6 +26,11 @@
   const USE_MODAL = true;
   const CHANNEL_URL = `https://www.youtube.com/@${HANDLE}`;
 
+  // Resiliencia: servicios terceros pueden fallar intermitente.
+  const FETCH_TIMEOUT_MS = 8000;
+  const RETRY_MAX = 3;
+  const RETRY_BASE_MS = 900;
+
   const RSS2JSON_V1 = "https://api.rss2json.com/v1/api.json?rss_url=";
   const RSS2JSON_LEGACY = "https://rss2json.com/api.json?rss_url=";
   const ALLORIGINS_RAW = "https://api.allorigins.win/raw?url=";
@@ -47,6 +52,23 @@
 
   const setStatus = (msg) => {
     statusEl.textContent = msg;
+  };
+
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const fetchWithTimeout = async (url, options = {}, timeoutMs = FETCH_TIMEOUT_MS) => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      return await fetch(url, {
+        cache: "no-store",
+        ...options,
+        signal: controller.signal
+      });
+    } finally {
+      clearTimeout(timer);
+    }
   };
 
   const escapeHtml = (str) =>
@@ -262,13 +284,17 @@
   };
 
   const fetchText = async (url) => {
-    const res = await fetch(url, { headers: { Accept: "text/plain, application/xml, text/xml, */*" } });
+    const res = await fetchWithTimeout(url, {
+      headers: { Accept: "text/plain, application/xml, text/xml, */*" }
+    });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return await res.text();
   };
 
   const fetchJson = async (url) => {
-    const res = await fetch(url, { headers: { Accept: "application/json" } });
+    const res = await fetchWithTimeout(url, {
+      headers: { Accept: "application/json" }
+    });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return await res.json();
   };
@@ -385,72 +411,103 @@
   };
 
   const fetchSermones = async () => {
-    // Cache básico para mejorar rendimiento y evitar golpear rss2json
     const cacheKey = `iccm_sermons_cache_${HANDLE}_${MAX_RESULTS}`;
     const now = Date.now();
 
+    let cachedItems = [];
+    let cacheExpired = true;
+    let renderedFromCache = false;
+
+    // 1) Render inmediato desde cache (aunque esté expirado) para evitar pantalla vacía.
     try {
       const cachedRaw = localStorage.getItem(cacheKey);
       if (cachedRaw) {
         const cached = JSON.parse(cachedRaw);
-        if (cached?.expiresAt > now && Array.isArray(cached?.items) && cached.items.length) {
-          renderFeatured(cached.items[0]);
-          renderCards(cached.items.slice(1));
-          setStatus("Mostrando los sermones más recientes.");
-          return;
+        if (Array.isArray(cached?.items) && cached.items.length) {
+          cachedItems = cached.items;
+          cacheExpired = !(cached?.expiresAt > now);
+          renderFeatured(cachedItems[0]);
+          renderCards(cachedItems.slice(1));
+          renderedFromCache = true;
+          setStatus(cacheExpired ? "Cargando los sermones más recientes…" : "Mostrando los sermones más recientes.");
+
+          // Si no está expirado, no golpeamos servicios terceros.
+          if (!cacheExpired) return;
         }
       }
     } catch {
       // ignore
     }
 
-    renderFeaturedSkeleton();
-    renderSkeletons(Math.max(0, MAX_RESULTS - 1));
-    setStatus("Cargando los sermones más recientes…");
-
-    try {
-      const { channelId, data: fallbackData } = await resolveChannelId();
-
-      // Preferimos el RSS oficial por channel_id (más estable)
-      let feedData = fallbackData;
-      if (channelId) {
-        const officialRss = `https://www.youtube.com/feeds/videos.xml?channel_id=${encodeURIComponent(channelId)}`;
-        feedData = await getFeedData(officialRss);
-      } else {
-        // Último fallback: intenta leer el feed legacy por user
-        const legacyRss = `https://www.youtube.com/feeds/videos.xml?user=${encodeURIComponent(HANDLE)}`;
-        feedData = await getFeedData(legacyRss);
-      }
-
-      const items = Array.isArray(feedData?.items) ? feedData.items.slice(0, MAX_RESULTS) : [];
-
-      if (!items.length) {
-        if (featuredEl) featuredEl.innerHTML = "";
-        grid.innerHTML = "";
-        setStatus("Aún no hay sermones para mostrar.");
-        return;
-      }
-
-      renderFeatured(items[0]);
-      renderCards(items.slice(1));
-      setStatus("Mostrando los sermones más recientes.");
-
-      try {
-        localStorage.setItem(
-          cacheKey,
-          JSON.stringify({
-            expiresAt: now + 30 * 60 * 1000, // 30 min
-            items
-          })
-        );
-      } catch {
-        // ignore
-      }
-    } catch {
-      if (featuredEl) featuredEl.innerHTML = "";
-      grid.innerHTML = "";
-      setStatus("No pudimos cargar los sermones en este momento.");
+    if (!renderedFromCache) {
+      renderFeaturedSkeleton();
+      renderSkeletons(Math.max(0, MAX_RESULTS - 1));
+      setStatus("Cargando los sermones más recientes…");
     }
+
+    const attemptFetch = async (attempt) => {
+      try {
+        const { channelId, data: fallbackData } = await resolveChannelId();
+
+        // Preferimos el RSS oficial por channel_id (más estable)
+        let feedData = fallbackData;
+        if (channelId) {
+          const officialRss = `https://www.youtube.com/feeds/videos.xml?channel_id=${encodeURIComponent(channelId)}`;
+          feedData = await getFeedData(officialRss);
+        } else {
+          const legacyRss = `https://www.youtube.com/feeds/videos.xml?user=${encodeURIComponent(HANDLE)}`;
+          feedData = await getFeedData(legacyRss);
+        }
+
+        const items = Array.isArray(feedData?.items) ? feedData.items.slice(0, MAX_RESULTS) : [];
+
+        if (!items.length) {
+          if (featuredEl) featuredEl.innerHTML = "";
+          grid.innerHTML = "";
+          setStatus("Aún no hay sermones para mostrar.");
+          return;
+        }
+
+        renderFeatured(items[0]);
+        renderCards(items.slice(1));
+        setStatus("Mostrando los sermones más recientes.");
+
+        try {
+          localStorage.setItem(
+            cacheKey,
+            JSON.stringify({
+              expiresAt: Date.now() + 30 * 60 * 1000, // 30 min
+              items
+            })
+          );
+        } catch {
+          // ignore
+        }
+      } catch {
+        const shouldRetry = attempt < RETRY_MAX;
+
+        if (renderedFromCache) {
+          setStatus(shouldRetry ? "Conexión inestable… reintentando." : "Mostrando mensajes guardados. No pudimos actualizar por ahora.");
+        } else {
+          setStatus(shouldRetry ? "Conexión inestable… reintentando." : "No pudimos cargar los sermones en este momento.");
+        }
+
+        if (!shouldRetry) {
+          if (!renderedFromCache) {
+            if (featuredEl) featuredEl.innerHTML = "";
+            grid.innerHTML = "";
+          }
+          return;
+        }
+
+        const jitter = Math.floor(Math.random() * 260);
+        const delay = RETRY_BASE_MS * Math.pow(2, attempt - 1) + jitter;
+        await sleep(delay);
+        return attemptFetch(attempt + 1);
+      }
+    };
+
+    await attemptFetch(1);
   };
 
   if (document.readyState === "loading") {
