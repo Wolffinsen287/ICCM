@@ -617,6 +617,19 @@ a {
   grid-column: 1 / -1;
 }
 
+/* En el banner con video, el ghost debe verse claro */
+.visit-strip .btn--ghost {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.visit-strip .btn--ghost:hover,
+.visit-strip .btn--ghost:focus-visible {
+  background: rgba(255, 255, 255, 0.20);
+  border-color: rgba(255, 255, 255, 0.30);
+}
+
 .visit-strip__sub {
   margin: .55rem 0 0;
   color: rgba(255, 255, 255, 0.74);
