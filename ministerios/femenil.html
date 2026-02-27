@@ -20,7 +20,7 @@
     />
 
     <link rel="icon" href="../images/ICCMLogo.jpg" type="image/jpeg" />
-    <link rel="stylesheet" href="../css/styles.css?v=63b3c4c" />
+    <link rel="stylesheet" href="../css/styles.css?v=63b3c4c-v2" />
   </head>
 
   <body class="page--ministry">
@@ -59,44 +59,113 @@
     </header>
 
     <main id="contenido">
-      <section class="section section--alt" aria-label="Información del ministerio">
+      <!-- HERO (full width) -->
+      <section class="min-hero" aria-label="Femenil">
+        <div class="container min-hero__inner">
+          <div class="min-hero__content">
+            <p class="hero__eyebrow animate animate--up delay-1">Ministerio</p>
+            <!-- EDITAR: nombre del ministerio -->
+            <h1 class="hero__headline animate animate--up delay-2">Femenil</h1>
+            <!-- EDITAR: frase corta debajo del título -->
+            <p class="hero__subhead animate animate--up delay-3">Fe · Amistad · Crecimiento</p>
+
+            <div class="hero__actions">
+              <a class="btn btn--primary animate animate--up delay-4" href="../index.html#contacto">Contáctanos</a>
+              <a class="btn btn--ghost animate animate--up delay-5" href="../index.html#ministerios">Ver más ministerios</a>
+            </div>
+          </div>
+
+          <!-- EDITAR: imagen del ministerio (se muestra completa, sin recorte) -->
+          <div class="min-hero__media animate animate--right delay-2">
+            <img
+              class="min-hero__img"
+              src="../images/Femenil%20(Presentaci%C3%B3n).png"
+              alt="Ministerio Femenil"
+              loading="lazy"
+              decoding="async"
+              width="1200"
+              height="700"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTENIDO (secciones claras) -->
+      <section class="section" aria-label="Detalles del ministerio">
         <div class="container">
-          <div class="section__head section__head--center">
-            <h1 class="section__title">Femenil</h1>
-            <p class="section__lead">Fe · Amistad · Crecimiento</p>
+          <div class="section__head animate animate--up">
+            <h2 class="section__title">Sobre este ministerio</h2>
+            <p class="section__lead">Un espacio para fortalecer la fe y caminar juntas en comunidad.</p>
           </div>
 
           <div class="grid-2">
-            <div class="card card--hover">
-              <img
-                class="card__media"
-                src="../images/Femenil%20(Presentaci%C3%B3n).png"
-                alt="Ministerio Femenil"
-                loading="lazy"
-                decoding="async"
-                width="1200"
-                height="700"
-              />
+            <div class="stack animate animate--left">
+              <div class="card card--soft">
+                <h3 class="card__title">Lo que encontrarás</h3>
+                <p class="card__text">Momentos de enseñanza, conversación y apoyo para crecer juntas en la Palabra.</p>
+                <p class="card__text"><strong>Cómo participar:</strong> Escríbenos y te compartimos fechas y detalles.</p>
+              </div>
+
+              <div class="card card--hover">
+                <h3 class="card__title">Nota</h3>
+                <p class="card__text">Escríbenos para conocer próximas reuniones.</p>
+              </div>
             </div>
 
-            <div class="stack">
-              <div class="card card--soft">
-                <h2 class="card__title">Información básica</h2>
+            <div class="stack animate animate--right">
+              <div class="card card--hover">
+                <h3 class="card__title">Información rápida</h3>
 
-                <p class="card__text">Un espacio para fortalecer la fe y caminar juntas en comunidad.</p>
-
-                <p class="card__text"><strong>Día y horario:</strong> (por confirmar)</p>
-                <p class="card__text"><strong>Ubicación:</strong> ICCM / puntos de reunión</p>
-                <p class="card__text"><strong>Público dirigido:</strong> Mujeres</p>
+                <dl class="min-facts" aria-label="Datos del ministerio">
+                  <div class="min-facts__item">
+                    <dt class="min-facts__k">Día y horario</dt>
+                    <dd class="min-facts__v">(por confirmar)</dd>
+                  </div>
+                  <div class="min-facts__item">
+                    <dt class="min-facts__k">Ubicación</dt>
+                    <dd class="min-facts__v">ICCM / puntos de reunión</dd>
+                  </div>
+                  <div class="min-facts__item">
+                    <dt class="min-facts__k">Público</dt>
+                    <dd class="min-facts__v">Mujeres</dd>
+                  </div>
+                </dl>
 
                 <div class="btn-row">
                   <a class="btn btn--primary" href="../index.html#contacto">Contáctanos</a>
                   <a class="btn btn--ghost" href="../index.html#ministerios">Ver más ministerios</a>
                 </div>
               </div>
-
-              <p class="note">Escríbenos para conocer próximas reuniones.</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOQUE DESTACADO OSCURO -->
+      <section class="section section--dark" aria-label="Invitación">
+        <div class="container">
+          <div class="min-callout animate animate--up">
+            <h2 class="section__title section__title--light">Camina en comunidad</h2>
+            <p class="section__lead section__lead--light">Nos encantará recibirte. Escríbenos para conocer la próxima reunión.</p>
+            <div class="btn-row">
+              <a class="btn btn--primary" href="../index.html#contacto">Quiero participar</a>
+              <a class="btn btn--ghost" href="../index.html#horarios">Planifica tu visita</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA FINAL -->
+      <section class="section section--alt" aria-label="Cierre">
+        <div class="container min-cta">
+          <div class="section__head section__head--center animate animate--up">
+            <h2 class="section__title">Te esperamos</h2>
+            <p class="section__lead">Nos encantará conocerte y ayudarte a conectar con comunidad.</p>
+          </div>
+
+          <div class="btn-row">
+            <a class="btn btn--primary" href="../index.html#horarios">Planifica tu visita</a>
+            <a class="btn btn--ghost" href="../index.html#contacto">Hacer una pregunta</a>
           </div>
         </div>
       </section>
@@ -158,8 +227,8 @@
       </div>
     </footer>
 
-    <script src="../js/youtube.js?v=63b3c4c" defer></script>
-    <script src="../js/animations.js?v=63b3c4c" defer></script>
-    <script src="../js/main.js?v=63b3c4c" defer></script>
+    <script src="../js/youtube.js?v=63b3c4c-v2" defer></script>
+    <script src="../js/animations.js?v=63b3c4c-v2" defer></script>
+    <script src="../js/main.js?v=63b3c4c-v2" defer></script>
   </body>
 </html>

@@ -1096,6 +1096,141 @@ main .section + .section {
   object-fit: contain;
 }
 
+/* ----------------------
+   Páginas individuales de ministerios (layout v2)
+   - Hero full width con jerarquía clara
+   - Secciones modernas + CTA
+   - Mantiene los tokens/identidad del sitio
+---------------------- */
+
+.page--ministry .min-hero {
+  position: relative;
+  overflow: hidden;
+  padding-top: var(--nav-h);
+  background: var(--c-dark-bg);
+  color: var(--c-on-dark);
+}
+
+.page--ministry .min-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1100px 680px at 18% 18%, rgba(28, 141, 182, 0.30), transparent 55%),
+    radial-gradient(1000px 620px at 85% 28%, rgba(244, 162, 97, 0.14), transparent 60%),
+    linear-gradient(120deg, rgba(var(--c-dark-rgb), 0.92), rgba(var(--c-dark-rgb), 0.62));
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page--ministry .min-hero__inner {
+  position: relative;
+  z-index: 1;
+  padding: clamp(3.2rem, 6vw, 4.6rem) 0 clamp(2.2rem, 5vw, 3.4rem);
+  display: grid;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .page--ministry .min-hero__inner {
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 2.2rem;
+  }
+}
+
+.page--ministry .min-hero__content {
+  max-width: 60rem;
+}
+
+/* Reutiliza el estilo de hero del home (tipografía + jerarquía) */
+.page--ministry .min-hero .hero__eyebrow {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.page--ministry .min-hero .hero__headline {
+  margin-top: .55rem;
+  color: rgba(255, 255, 255, 0.98);
+  text-shadow: 0 18px 54px rgba(0, 0, 0, 0.45);
+}
+
+.page--ministry .min-hero .hero__subhead {
+  max-width: 52ch;
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.page--ministry .min-hero__media {
+  border-radius: 28px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--card-outline);
+  filter:
+    drop-shadow(0 22px 50px var(--blue-glow))
+    drop-shadow(0 10px 24px var(--blue-glow-soft));
+}
+
+.page--ministry .min-hero__img {
+  width: 100%;
+  height: clamp(260px, 34vw, 420px);
+  object-fit: contain;
+  background:
+    radial-gradient(700px 420px at 20% 20%, rgba(28, 141, 182, 0.18), transparent 60%),
+    rgba(0, 0, 0, 0.10);
+}
+
+.page--ministry .min-facts {
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: .55rem;
+}
+
+.page--ministry .min-facts__item {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: .75rem;
+}
+
+.page--ministry .min-facts__k {
+  font-weight: 800;
+  color: var(--c-text);
+}
+
+.page--ministry .min-facts__v {
+  margin: 0;
+  color: var(--c-muted);
+}
+
+@media (max-width: 420px) {
+  .page--ministry .min-facts__item {
+    grid-template-columns: 1fr;
+    gap: .15rem;
+  }
+}
+
+.page--ministry .min-callout {
+  border-radius: 28px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--card-outline);
+  padding: clamp(1.35rem, 3.2vw, 2.1rem);
+}
+
+.page--ministry .min-callout .btn-row {
+  margin-top: 1.1rem;
+}
+
+.page--ministry .min-cta {
+  text-align: center;
+}
+
+.page--ministry .min-cta .btn-row {
+  justify-content: center;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;

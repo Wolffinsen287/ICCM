@@ -24,7 +24,7 @@
     />
 
     <link rel="icon" href="../images/ICCMLogo.jpg" type="image/jpeg" />
-    <link rel="stylesheet" href="../css/styles.css?v=63b3c4c" />
+    <link rel="stylesheet" href="../css/styles.css?v=63b3c4c-v2" />
   </head>
 
   <body class="page--ministry">
@@ -72,57 +72,117 @@
     </header>
 
     <main id="contenido">
-      <section class="section section--alt" aria-label="Información del ministerio">
-        <div class="container">
-          <div class="section__head section__head--center">
+      <!-- HERO (full width) -->
+      <section class="min-hero" aria-label="Grupos pequeños">
+        <div class="container min-hero__inner">
+          <div class="min-hero__content">
+            <p class="hero__eyebrow animate animate--up delay-1">Ministerio</p>
             <!-- EDITAR: nombre del ministerio -->
-            <h1 class="section__title">Grupos pequeños</h1>
+            <h1 class="hero__headline animate animate--up delay-2">Grupos pequeños</h1>
             <!-- EDITAR: frase corta debajo del título -->
-            <p class="section__lead">Comunidad · Discipulado · Oración</p>
+            <p class="hero__subhead animate animate--up delay-3">Comunidad · Discipulado · Oración</p>
+
+            <div class="hero__actions">
+              <a class="btn btn--primary animate animate--up delay-4" href="../index.html#contacto">Contáctanos</a>
+              <a class="btn btn--ghost animate animate--up delay-5" href="../index.html#ministerios">Ver más ministerios</a>
+            </div>
+          </div>
+
+          <!-- EDITAR: imagen del ministerio (se muestra completa, sin recorte) -->
+          <div class="min-hero__media animate animate--right delay-2">
+            <img
+              class="min-hero__img"
+              src="../images/Grupos%20peque%C3%B1os%20(Presentaci%C3%B3n).png"
+              alt="Grupos pequeños"
+              loading="lazy"
+              decoding="async"
+              width="1200"
+              height="700"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTENIDO (secciones claras) -->
+      <section class="section" aria-label="Detalles del ministerio">
+        <div class="container">
+          <div class="section__head animate animate--up">
+            <h2 class="section__title">Sobre este ministerio</h2>
+            <p class="section__lead">Reuniones en casas para conectar, estudiar la Biblia y orar juntos durante la semana.</p>
           </div>
 
           <div class="grid-2">
-            <div class="card card--hover">
-              <!-- EDITAR: imagen del ministerio -->
-              <img
-                class="card__media"
-                src="../images/Grupos%20peque%C3%B1os%20(Presentaci%C3%B3n).png"
-                alt="Grupos pequeños"
-                loading="lazy"
-                decoding="async"
-                width="1200"
-                height="700"
-              />
+            <div class="stack animate animate--left">
+              <div class="card card--soft">
+                <h3 class="card__title">Lo que encontrarás</h3>
+                <p class="card__text">Comunidad real, conversación bíblica y un espacio para orar unos por otros.</p>
+                <p class="card__text"><strong>Cómo participar:</strong> Escríbenos y te ayudamos a encontrar el grupo más cercano.</p>
+              </div>
+
+              <div class="card card--hover">
+                <h3 class="card__title">Nota</h3>
+                <p class="card__text">¿Quieres unirte a un grupo? Escríbenos y te ayudamos a encontrar el más cercano.</p>
+              </div>
             </div>
 
-            <div class="stack">
-              <div class="card card--soft">
-                <h2 class="card__title">Información básica</h2>
+            <div class="stack animate animate--right">
+              <div class="card card--hover">
+                <h3 class="card__title">Información rápida</h3>
 
-                <!-- EDITAR: contenido del ministerio -->
-                <p class="card__text">
-                  Reuniones en casas para conectar, estudiar la Biblia y orar juntos durante la semana.
-                </p>
-
-                <p class="card__text"><strong>Día y horario:</strong> Entre semana (varía por grupo)</p>
-                <p class="card__text"><strong>Ubicación:</strong> Casas / puntos de reunión (Mazatlán)</p>
-                <p class="card__text"><strong>Público dirigido:</strong> Jóvenes y adultos</p>
-
-                <!-- EDITAR (opcional): persona de contacto -->
-                <p class="card__text"><strong>Contacto:</strong> ICCMazatlán</p>
+                <dl class="min-facts" aria-label="Datos del ministerio">
+                  <div class="min-facts__item">
+                    <dt class="min-facts__k">Día y horario</dt>
+                    <dd class="min-facts__v">Entre semana (varía por grupo)</dd>
+                  </div>
+                  <div class="min-facts__item">
+                    <dt class="min-facts__k">Ubicación</dt>
+                    <dd class="min-facts__v">Casas / puntos de reunión (Mazatlán)</dd>
+                  </div>
+                  <div class="min-facts__item">
+                    <dt class="min-facts__k">Público</dt>
+                    <dd class="min-facts__v">Jóvenes y adultos</dd>
+                  </div>
+                  <div class="min-facts__item">
+                    <dt class="min-facts__k">Contacto</dt>
+                    <dd class="min-facts__v">ICCMazatlán</dd>
+                  </div>
+                </dl>
 
                 <div class="btn-row">
-                  <!-- EDITAR: CTA principal -->
                   <a class="btn btn--primary" href="../index.html#contacto">Contáctanos</a>
                   <a class="btn btn--ghost" href="../index.html#ministerios">Ver más ministerios</a>
                 </div>
               </div>
-
-              <p class="note">
-                <!-- EDITAR: nota opcional -->
-                ¿Quieres unirte a un grupo? Escríbenos y te ayudamos a encontrar el más cercano.
-              </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOQUE DESTACADO OSCURO -->
+      <section class="section section--dark" aria-label="Invitación">
+        <div class="container">
+          <div class="min-callout animate animate--up">
+            <h2 class="section__title section__title--light">Da el siguiente paso</h2>
+            <p class="section__lead section__lead--light">Si quieres unirte a un grupo o necesitas más información, escríbenos y con gusto te orientamos.</p>
+            <div class="btn-row">
+              <a class="btn btn--primary" href="../index.html#contacto">Quiero unirme</a>
+              <a class="btn btn--ghost" href="../index.html#horarios">Planifica tu visita</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA FINAL -->
+      <section class="section section--alt" aria-label="Cierre">
+        <div class="container min-cta">
+          <div class="section__head section__head--center animate animate--up">
+            <h2 class="section__title">Te esperamos</h2>
+            <p class="section__lead">Nos encantará conocerte y ayudarte a conectar con comunidad.</p>
+          </div>
+
+          <div class="btn-row">
+            <a class="btn btn--primary" href="../index.html#horarios">Planifica tu visita</a>
+            <a class="btn btn--ghost" href="../index.html#contacto">Hacer una pregunta</a>
           </div>
         </div>
       </section>
@@ -191,8 +251,8 @@
     </footer>
 
     <!-- Scripts (mismos del sitio principal) -->
-    <script src="../js/youtube.js?v=63b3c4c" defer></script>
-    <script src="../js/animations.js?v=63b3c4c" defer></script>
-    <script src="../js/main.js?v=63b3c4c" defer></script>
+    <script src="../js/youtube.js?v=63b3c4c-v2" defer></script>
+    <script src="../js/animations.js?v=63b3c4c-v2" defer></script>
+    <script src="../js/main.js?v=63b3c4c-v2" defer></script>
   </body>
 </html>
