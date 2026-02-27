@@ -702,18 +702,17 @@ main .section + .section {
   color: var(--c-on-dark);
 }
 
+/* Quita la línea divisoria (border-top) que se aplica a secciones consecutivas */
+main .section.section--esperamos {
+  border-top: none;
+}
+
 .section--esperamos::before {
   content: none;
 }
 
 .section--esperamos::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(1000px 520px at 25% 18%, rgba(28, 141, 182, 0.26), transparent 58%),
-    linear-gradient(120deg, rgba(var(--c-dark-rgb), 0.86), rgba(var(--c-dark-rgb), 0.46));
-  z-index: 1;
+  content: none;
 }
 
 .section--esperamos .container {
@@ -1106,37 +1105,33 @@ main .section + .section {
 .page--ministry .min-hero {
   position: relative;
   overflow: hidden;
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
   padding-top: var(--nav-h);
   background: var(--c-dark-bg);
   color: var(--c-on-dark);
+  isolation: isolate;
+}
+
+.page--ministry .min-hero__bg {
+  position: absolute;
+  inset: 0;
+  background-image: var(--min-hero-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
 }
 
 .page--ministry .min-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(1100px 680px at 18% 18%, rgba(28, 141, 182, 0.30), transparent 55%),
-    radial-gradient(1000px 620px at 85% 28%, rgba(244, 162, 97, 0.14), transparent 60%),
-    linear-gradient(120deg, rgba(var(--c-dark-rgb), 0.92), rgba(var(--c-dark-rgb), 0.62));
-  pointer-events: none;
-  z-index: 0;
+  content: none;
 }
 
 .page--ministry .min-hero__inner {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   padding: clamp(3.2rem, 6vw, 4.6rem) 0 clamp(2.2rem, 5vw, 3.4rem);
-  display: grid;
-  gap: 1.5rem;
-  align-items: center;
-}
-
-@media (min-width: 900px) {
-  .page--ministry .min-hero__inner {
-    grid-template-columns: 1.15fr 0.85fr;
-    gap: 2.2rem;
-  }
 }
 
 .page--ministry .min-hero__content {
@@ -1172,11 +1167,8 @@ main .section + .section {
 
 .page--ministry .min-hero__img {
   width: 100%;
-  height: clamp(260px, 34vw, 420px);
-  object-fit: contain;
-  background:
-    radial-gradient(700px 420px at 20% 20%, rgba(28, 141, 182, 0.18), transparent 60%),
-    rgba(0, 0, 0, 0.10);
+  height: auto;
+  display: block;
 }
 
 .page--ministry .min-facts {
@@ -1466,8 +1458,8 @@ main .section + .section {
 }
 
 .carousel--marquee .min-card__media img {
-  height: clamp(260px, 32vw, 380px);
-  object-fit: contain;
+  height: auto;
+  display: block;
 }
 
 .min-card__content {
@@ -1673,7 +1665,7 @@ main .section + .section {
   }
 
   .carousel--marquee .min-card__media img {
-    height: 380px;
+    height: auto;
   }
 }
 
