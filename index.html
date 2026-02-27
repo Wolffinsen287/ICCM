@@ -251,64 +251,78 @@
           </div>
 
           <div class="ministries">
-            <article class="min-feature animate animate--up" aria-label="Ministerio destacado">
-              <div class="min-feature__media" aria-hidden="true">
-                <img
-                  src="images/Jovenes (Presentación).png"
-                  alt="Ministerio de jóvenes"
-                  loading="lazy"
-                  decoding="async"
-                  width="1200"
-                  height="700"
-                />
-              </div>
-              <div class="min-feature__content">
-                <h3 class="min-feature__title">Jóvenes</h3>
-                <p class="min-feature__meta">Comunidad · Amistad · Discipulado</p>
-                <p class="min-feature__text">
-                  Un espacio para crecer en tu fe, hacer amistades genuinas y caminar juntos con propósito.
-                </p>
-              </div>
-            </article>
+            <div
+              class="carousel carousel--ministries carousel--marquee"
+              data-carousel-marquee
+              data-speed="40"
+              aria-label="Carrusel de ministerios"
+            >
+              <div class="carousel__viewport" data-carousel-viewport>
+                <div class="carousel__track" data-carousel-track aria-label="Lista de ministerios">
+                  <article class="min-card animate animate--up" aria-label="Ministerio de jóvenes">
+                    <a class="min-card__link" href="ministerios/jovenes.html" aria-label="Ver información de Jóvenes">
+                      <div class="min-card__media" aria-hidden="true">
+                        <img
+                          src="images/Jovenes%20(Presentaci%C3%B3n).png"
+                          alt="Ministerio de jóvenes"
+                          loading="lazy"
+                          decoding="async"
+                          width="1200"
+                          height="700"
+                        />
+                      </div>
+                      <div class="min-card__content">
+                        <h3 class="min-card__title">Jóvenes</h3>
+                        <p class="min-card__meta">Comunidad · Amistad · Discipulado</p>
+                        <p class="min-card__text">
+                          Un espacio para crecer en tu fe, hacer amistades genuinas y caminar juntos con propósito.
+                        </p>
+                      </div>
+                    </a>
+                  </article>
 
-            <div class="min-grid" aria-label="Lista de ministerios">
-              <article class="min-card animate animate--up" aria-label="Ministerio de niños">
-                <div class="min-card__media" aria-hidden="true">
-                  <img
-                    src="images/niños.png"
-                    alt="Ministerio de niños"
-                    loading="lazy"
-                    decoding="async"
-                    width="1200"
-                    height="700"
-                  />
-                </div>
-                <div class="min-card__content">
-                  <h3 class="min-card__title">Niños</h3>
-                  <p class="min-card__meta">Aprenden · Cantan · Crecen</p>
-                  <p class="min-card__text">Un ambiente seguro y alegre para conocer a Jesús desde pequeños.</p>
-                </div>
-              </article>
+                  <article class="min-card animate animate--up" aria-label="Ministerio de niños">
+                    <a class="min-card__link" href="ministerios/ninos.html" aria-label="Ver información de Niños">
+                      <div class="min-card__media" aria-hidden="true">
+                        <img
+                          src="images/niños.png"
+                          alt="Ministerio de niños"
+                          loading="lazy"
+                          decoding="async"
+                          width="1200"
+                          height="700"
+                        />
+                      </div>
+                      <div class="min-card__content">
+                        <h3 class="min-card__title">Niños</h3>
+                        <p class="min-card__meta">Aprenden · Cantan · Crecen</p>
+                        <p class="min-card__text">Un ambiente seguro y alegre para conocer a Jesús desde pequeños.</p>
+                      </div>
+                    </a>
+                  </article>
 
-              <article class="min-card animate animate--up" aria-label="Grupos pequeños">
-                <div class="min-card__media" aria-hidden="true">
-                  <img
-                    src="images/Grupos%20peque%C3%B1os%20(Presentaci%C3%B3n).png"
-                    alt="Grupos pequeños"
-                    loading="lazy"
-                    decoding="async"
-                    width="1200"
-                    height="700"
-                  />
-                </div>
-                <div class="min-card__content">
-                  <h3 class="min-card__title">Grupos pequeños</h3>
-                  <p class="min-card__meta">Comunidad · Discipulado · Oración</p>
-                  <p class="min-card__text">Conéctate, crece en la Palabra y camina acompañado.</p>
-                </div>
-              </article>
+                  <article class="min-card animate animate--up" aria-label="Grupos pequeños">
+                    <a class="min-card__link" href="ministerios/grupos.html" aria-label="Ver información de Grupos pequeños">
+                      <div class="min-card__media" aria-hidden="true">
+                        <img
+                          src="images/Grupos%20peque%C3%B1os%20(Presentaci%C3%B3n).png"
+                          alt="Grupos pequeños"
+                          loading="lazy"
+                          decoding="async"
+                          width="1200"
+                          height="700"
+                        />
+                      </div>
+                      <div class="min-card__content">
+                        <h3 class="min-card__title">Grupos pequeños</h3>
+                        <p class="min-card__meta">Comunidad · Discipulado · Oración</p>
+                        <p class="min-card__text">Conéctate, crece en la Palabra y camina acompañado.</p>
+                      </div>
+                    </a>
+                  </article>
 
-              <article class="min-card animate animate--up" aria-label="Oración">
+                  <article class="min-card animate animate--up" aria-label="Oración">
+                    <a class="min-card__link" href="ministerios/oracion.html" aria-label="Ver información de Oración">
                       <div class="min-card__media" aria-hidden="true">
                         <img
                           src="images/Oraci%C3%B3n%20(Presentaci%C3%B3n).png"
@@ -324,7 +338,50 @@
                         <p class="min-card__meta">Intercesión · Gratitud · Esperanza</p>
                         <p class="min-card__text">Trae tus peticiones; oramos juntos y buscamos a Dios con fe.</p>
                       </div>
-              </article>
+                    </a>
+                  </article>
+
+                  <article class="min-card animate animate--up" aria-label="Ministerio femenil">
+                    <a class="min-card__link" href="ministerios/femenil.html" aria-label="Ver información de Femenil">
+                      <div class="min-card__media" aria-hidden="true">
+                        <img
+                          src="images/Femenil%20(Presentaci%C3%B3n).png"
+                          alt="Ministerio femenil"
+                          loading="lazy"
+                          decoding="async"
+                          width="1200"
+                          height="700"
+                        />
+                      </div>
+                      <div class="min-card__content">
+                        <h3 class="min-card__title">Femenil</h3>
+                        <p class="min-card__meta">Fe · Amistad · Crecimiento</p>
+                        <p class="min-card__text">Un espacio para fortalecer la fe y caminar juntas en comunidad.</p>
+                      </div>
+                    </a>
+                  </article>
+
+                  <article class="min-card animate animate--up" aria-label="Clase bíblica">
+                    <a class="min-card__link" href="ministerios/clase-biblica.html" aria-label="Ver información de Clase bíblica">
+                      <div class="min-card__media" aria-hidden="true">
+                        <img
+                          src="images/Clase%20biblica%20(Presentaci%C3%B3n).png"
+                          alt="Clase bíblica"
+                          loading="lazy"
+                          decoding="async"
+                          width="1200"
+                          height="700"
+                        />
+                      </div>
+                      <div class="min-card__content">
+                        <h3 class="min-card__title">Clase bíblica</h3>
+                        <p class="min-card__meta">Biblia · Discipulado · Vida</p>
+                        <p class="min-card__text">Aprendemos la Palabra para vivirla con claridad y propósito.</p>
+                      </div>
+                    </a>
+                  </article>
+                </div>
+              </div>
             </div>
           </div>
         </div>

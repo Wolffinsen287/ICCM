@@ -1087,6 +1087,15 @@ main .section + .section {
   margin: .65rem 0 .9rem;
 }
 
+/* Páginas individuales de ministerios: mostrar la imagen completa (sin recorte) */
+.page--ministry {
+  --card-media-h: auto;
+}
+
+.page--ministry .card__media {
+  object-fit: contain;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -1316,6 +1325,16 @@ main .section + .section {
   display: block;
 }
 
+/* En carrusel continuo: prioriza que la imagen quepa completa (sin recorte) */
+.carousel--marquee .min-card__media {
+  background: var(--c-surface-2);
+}
+
+.carousel--marquee .min-card__media img {
+  height: clamp(260px, 32vw, 380px);
+  object-fit: contain;
+}
+
 .min-card__content {
   padding: 1.05rem 1.1rem 1.2rem;
   display: grid;
@@ -1341,6 +1360,164 @@ main .section + .section {
   color: var(--c-muted);
 }
 
+/* Permite que toda la card sea clickeable sin cambiar el look */
+.min-card__link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.min-card__link:focus-visible {
+  outline: 2px solid rgba(28, 141, 182, 0.55);
+  outline-offset: 3px;
+  border-radius: var(--radius-lg);
+}
+
+/* ----------------------
+   Carrusel (reutilizable)
+   - Autoplay + loop infinito se controlan por JS
+   - Mantiene el diseño de las cards existentes
+---------------------- */
+
+.carousel {
+  --carousel-gap: 1rem;
+  --carousel-btn-size: 44px;
+
+  position: relative;
+  display: grid;
+  gap: .85rem;
+}
+
+.carousel__viewport {
+  overflow: hidden;
+  /* Padding para que no se corten sombras en los bordes */
+  padding: .35rem;
+  margin: -.35rem;
+
+  position: relative;
+
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel__track {
+  display: flex;
+  gap: var(--carousel-gap);
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Modo marquesina: movimiento continuo (controlado por JS con rAF) */
+.carousel--marquee .carousel__track {
+  transition: none !important;
+}
+
+/* Fade premium en extremos (tipo Apple/Nike/Stripe) */
+.carousel--marquee .carousel__viewport::before,
+.carousel--marquee .carousel__viewport::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(34px, 6vw, 84px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.carousel--marquee .carousel__viewport::before {
+  left: 0;
+  background: linear-gradient(90deg, rgba(var(--c-bg-rgb), 1), rgba(var(--c-bg-rgb), 0));
+}
+
+.carousel--marquee .carousel__viewport::after {
+  right: 0;
+  background: linear-gradient(270deg, rgba(var(--c-bg-rgb), 1), rgba(var(--c-bg-rgb), 0));
+}
+
+/* Las slides son las mismas .min-card; el ancho lo setea JS dinámicamente */
+.carousel__track > .min-card {
+  flex: 0 0 auto;
+}
+
+.carousel__btn {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  width: var(--carousel-btn-size);
+  height: var(--carousel-btn-size);
+  border-radius: 999px;
+
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+
+  background: rgba(var(--c-surface-rgb), 0.92);
+  border: 1px solid var(--c-border);
+  color: var(--c-primary-dark);
+  box-shadow: var(--shadow-sm);
+
+  transition: transform 180ms var(--ease), opacity 180ms var(--ease), background 180ms var(--ease);
+  user-select: none;
+}
+
+.carousel__btn:hover,
+.carousel__btn:focus-visible {
+  outline: none;
+  transform: scale(1.04);
+  background: rgba(var(--c-surface-rgb), 0.98);
+}
+
+.carousel__btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+  transform: none;
+}
+
+.carousel__btn--prev {
+  left: .25rem;
+}
+
+.carousel__btn--next {
+  right: .25rem;
+}
+
+.carousel__dots {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: .45rem;
+}
+
+.carousel__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(28, 141, 182, 0.32);
+  background: rgba(28, 141, 182, 0.14);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 180ms var(--ease), background 180ms var(--ease), border-color 180ms var(--ease);
+}
+
+.carousel__dot:hover,
+.carousel__dot:focus-visible {
+  outline: none;
+  transform: scale(1.15);
+  border-color: rgba(28, 141, 182, 0.52);
+  background: rgba(28, 141, 182, 0.22);
+}
+
+.carousel__dot[aria-current="true"] {
+  background: rgba(28, 141, 182, 0.65);
+  border-color: rgba(28, 141, 182, 0.85);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel__track {
+    transition: none !important;
+  }
+}
+
 @media (min-width: 900px) {
   .min-feature {
     grid-template-columns: 1.05fr 0.95fr;
@@ -1358,6 +1535,10 @@ main .section + .section {
 
   .min-card__media img {
     height: 280px;
+  }
+
+  .carousel--marquee .min-card__media img {
+    height: 380px;
   }
 }
 
