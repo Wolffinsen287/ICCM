@@ -1,28 +1,27 @@
 /*
-  Sermones (100% estático para Hostinger)
+  Sermones con backend local en Hostinger
   - NO usa YouTube Data API
   - NO usa API keys
-  - NO usa backend
-  - NO depende de proxies lentos ni RSS externos
+  - Usa PHP local para obtener el feed de YouTube
+  - NO depende de proxies lentos desde el navegador
 
   Estrategia:
-  1) Mostrar un conjunto fijo de videos de YouTube mediante IDs conocidos
-  2) Renderizar un video destacado y cards con miniaturas
-  3) Abrir video en modal o enlace directo al canal
+  1) Backend PHP solicita el feed oficial de YouTube
+  2) El frontend consume `/youtube-feed.php`
+  3) Renderiza el video destacado y la lista de videos más recientes
 */
 
 (() => {
   "use strict";
 
   const HANDLE = "iglesiacristianacongregaci5798"; // del URL: https://www.youtube.com/@...
-  // Opcional: si conoces el Channel ID (UC...), pégalo aquí para máxima confiabilidad.
-  // Si se deja vacío, el script intenta resolverlo automáticamente.
-  const FALLBACK_CHANNEL_ID = "";
   const MAX_RESULTS = 4;
+  const FETCH_TIMEOUT_MS = 8000;
   const USE_MODAL = true;
   const CHANNEL_URL = `https://www.youtube.com/@${HANDLE}`;
+  const API_URL = "youtube-feed.php";
 
-  const VIDEO_ITEMS = [
+  const FALLBACK_VIDEO_ITEMS = [
     {
       id: "5GSdmHkE0fI",
       title: "El Reino de Dios desde las parábolas.",
@@ -182,6 +181,8 @@
   };
 
   const extractVideoId = (item) => {
+    if (item?.id) return String(item.id);
+
     const link = String(item?.link || "");
 
     // Prefer link query param v=
@@ -315,24 +316,47 @@
     });
   };
 
-  const renderStaticVideos = () => {
-    if (!VIDEO_ITEMS.length) {
-      renderFallbackSermon();
+  const fetchSermones = async () => {
+    renderFeaturedSkeleton();
+    renderSkeletons(Math.max(0, MAX_RESULTS - 1));
+    setStatus("Cargando los videos más recientes…");
+
+    try {
+      const res = await fetchWithTimeout(API_URL, {
+        cache: "no-store",
+        headers: { Accept: "application/json" }
+      });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const data = await res.json();
+      const items = Array.isArray(data?.items) ? data.items.slice(0, MAX_RESULTS) : [];
+
+      if (!items.length) {
+        throw new Error("No hay videos disponibles");
+      }
+
+      renderFeatured(items[0]);
+      renderCards(items.slice(1));
+      setStatus("Mostrando los videos más recientes.");
       return;
+    } catch (error) {
+      const fallback = Array.isArray(FALLBACK_VIDEO_ITEMS) ? FALLBACK_VIDEO_ITEMS.slice(0, MAX_RESULTS) : [];
+      if (fallback.length) {
+        renderFeatured(fallback[0]);
+        renderCards(fallback.slice(1));
+        setStatus("No se pudieron cargar los videos más recientes. Mostrando una selección local.");
+        return;
+      }
+
+      renderFallbackSermon();
+      setStatus("No pudimos cargar los videos en este momento.");
     }
-
-    renderFeatured(VIDEO_ITEMS[0]);
-    renderCards(VIDEO_ITEMS.slice(1));
-    setStatus("Mostrando videos de YouTube.");
-  };
-
-  const init = () => {
-    renderStaticVideos();
   };
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", fetchSermones);
   } else {
-    init();
+    fetchSermones();
   }
 })();
