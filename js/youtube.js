@@ -1,18 +1,14 @@
 /*
-  Sermones (100% estático para GitHub Pages)
+  Sermones (100% estático para Hostinger)
   - NO usa YouTube Data API
   - NO usa API keys
   - NO usa backend
+  - NO depende de proxies lentos ni RSS externos
 
   Estrategia:
-  1) Intentar resolver Channel ID (UC...) a partir del @handle usando el RSS legacy (?user=)
-  2) Consumir el RSS oficial vía rss2json:
-     https://api.rss2json.com/v1/api.json?rss_url=
-  3) Renderizar 3 cards con thumbnail/título/fecha/botón
-  4) Modal opcional embebido con iframe
-
-  Nota:
-  - Dependemos de un servicio tercero (rss2json). Puede tener límites o fallar.
+  1) Mostrar un conjunto fijo de videos de YouTube mediante IDs conocidos
+  2) Renderizar un video destacado y cards con miniaturas
+  3) Abrir video en modal o enlace directo al canal
 */
 
 (() => {
@@ -26,17 +22,27 @@
   const USE_MODAL = true;
   const CHANNEL_URL = `https://www.youtube.com/@${HANDLE}`;
 
-  // Resiliencia: servicios terceros pueden fallar intermitente.
-  const FETCH_TIMEOUT_MS = 8000;
-  const RETRY_MAX = 3;
-  const RETRY_BASE_MS = 900;
-
-  const RSS2JSON_V1 = "https://api.rss2json.com/v1/api.json?rss_url=";
-  const RSS2JSON_LEGACY = "https://rss2json.com/api.json?rss_url=";
-  const PROXY_ENDPOINTS = [
-    "https://api.allorigins.win/raw?url=",
-    "https://api.allorigins.win/get?url=",
-    "https://corsproxy.io/?"
+  const VIDEO_ITEMS = [
+    {
+      id: "5GSdmHkE0fI",
+      title: "El Reino de Dios desde las parábolas.",
+      date: "3 años"
+    },
+    {
+      id: "GgG8QIqS3Xc",
+      title: "Servicio de Adoración del 11 de Septiembre del 2022",
+      date: "3 años"
+    },
+    {
+      id: "FcJ8BwCne7k",
+      title: "Antídoto contra las preocupaciones.",
+      date: "3 años"
+    },
+    {
+      id: "9F28p-TR9h4",
+      title: "Mentalidad cristiana.",
+      date: "3 años"
+    }
   ];
 
   const grid = document.getElementById("sermonsGrid");
@@ -137,10 +143,10 @@
   const renderFeatured = (it) => {
     if (!featuredEl) return;
 
-    const videoId = extractVideoId(it);
+    const videoId = String(it?.id || extractVideoId(it));
     const title = String(it?.title || "Mensaje");
-    const link = String(it?.link || "");
-    const date = formatDateEs(it?.pubDate);
+    const link = String(it?.link || (videoId ? `https://www.youtube.com/watch?v=${videoId}` : ""));
+    const date = String(it?.date || formatDateEs(it?.pubDate));
     const thumb = it?.thumbnail || getThumbnailFromVideoId(videoId);
 
     const safeTitle = escapeHtml(title);
@@ -266,10 +272,10 @@
     grid.innerHTML = "";
 
     items.forEach((it) => {
-      const videoId = extractVideoId(it);
+      const videoId = String(it?.id || extractVideoId(it));
       const title = String(it?.title || "Mensaje");
-      const link = String(it?.link || "");
-      const date = formatDateEs(it?.pubDate);
+      const link = String(it?.link || (videoId ? `https://www.youtube.com/watch?v=${videoId}` : ""));
+      const date = String(it?.date || formatDateEs(it?.pubDate));
 
       const thumb = it?.thumbnail || getThumbnailFromVideoId(videoId);
       const safeTitle = escapeHtml(title);
@@ -309,255 +315,24 @@
     });
   };
 
-  const fetchText = async (url) => {
-    const res = await fetchWithTimeout(url, {
-      headers: { Accept: "text/plain, application/xml, text/xml, */*" }
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.text();
-  };
-
-  const fetchJson = async (url) => {
-    const res = await fetchWithTimeout(url, {
-      headers: { Accept: "application/json" }
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
-  };
-
-  const fetchViaProxy = async (targetUrl) => {
-    for (const prefix of PROXY_ENDPOINTS) {
-      try {
-        const url = `${prefix}${encodeURIComponent(targetUrl)}`;
-        const res = await fetchWithTimeout(url, {
-          headers: { Accept: "text/plain, application/xml, text/xml, */*" }
-        });
-
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-        if (prefix.endsWith("/get?url=")) {
-          const json = await res.json();
-          if (json?.contents) return json.contents;
-          throw new Error("Proxy response missing contents");
-        }
-
-        return await res.text();
-      } catch {
-        // try next proxy
-      }
+  const renderStaticVideos = () => {
+    if (!VIDEO_ITEMS.length) {
+      renderFallbackSermon();
+      return;
     }
 
-    throw new Error("No proxy available");
+    renderFeatured(VIDEO_ITEMS[0]);
+    renderCards(VIDEO_ITEMS.slice(1));
+    setStatus("Mostrando videos de YouTube.");
   };
 
-  const rss2json = async (rssUrl, baseUrl) => {
-    const url = `${baseUrl}${encodeURIComponent(rssUrl)}`;
-    const data = await fetchJson(url);
-    if (data?.status !== "ok") throw new Error("RSS2JSON error");
-    return data;
-  };
-
-  const parseYouTubeRssXmlToItems = (xmlText) => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(xmlText, "application/xml");
-
-    // Si hay error de parseo, DOMParser genera <parsererror>
-    if (doc.getElementsByTagName("parsererror")?.length) {
-      throw new Error("XML parse error");
-    }
-
-    const entries = Array.from(doc.getElementsByTagName("entry"));
-
-    return entries.map((entry) => {
-      const title = entry.getElementsByTagName("title")?.[0]?.textContent || "";
-      const published = entry.getElementsByTagName("published")?.[0]?.textContent || "";
-
-      // link alterno
-      const links = Array.from(entry.getElementsByTagName("link"));
-      const alt = links.find((l) => (l.getAttribute("rel") || "").toLowerCase() === "alternate") || links[0];
-      const link = alt?.getAttribute("href") || "";
-
-      // yt:videoId (namespaced) suele venir como <yt:videoId>
-      const videoId =
-        entry.getElementsByTagName("yt:videoId")?.[0]?.textContent ||
-        entry.getElementsByTagName("videoId")?.[0]?.textContent ||
-        "";
-
-      const thumb =
-        entry.getElementsByTagName("media:thumbnail")?.[0]?.getAttribute("url") ||
-        getThumbnailFromVideoId(videoId);
-
-      return {
-        title,
-        link,
-        pubDate: published,
-        guid: videoId ? `yt:video:${videoId}` : "",
-        thumbnail: thumb
-      };
-    });
-  };
-
-  const getChannelIdFromHandle = async (handle) => {
-    // YouTube no permite CORS directo; usamos un proxy público para obtener el HTML.
-    const html = await fetchViaProxy(`https://www.youtube.com/@${encodeURIComponent(handle)}`);
-
-    // Varias formas posibles según el HTML:
-    const patterns = [
-      /"channelId"\s*:\s*"(UC[\w-]+)"/,
-      /"browseId"\s*:\s*"(UC[\w-]+)"/,
-      /\/channel\/(UC[\w-]+)/
-    ];
-
-    for (const re of patterns) {
-      const m = html.match(re);
-      if (m?.[1]) return m[1];
-    }
-
-    return "";
-  };
-
-  const getFeedData = async (rssUrl) => {
-    // 1) rss2json v1
-    try {
-      return await rss2json(rssUrl, RSS2JSON_V1);
-    } catch {
-      // ignore
-    }
-
-    // 2) rss2json legacy
-    try {
-      return await rss2json(rssUrl, RSS2JSON_LEGACY);
-    } catch {
-      // ignore
-    }
-
-    // 3) Fallback: XML directo vía proxy
-    const xml = await fetchViaProxy(rssUrl);
-    const items = parseYouTubeRssXmlToItems(xml);
-    return { status: "ok", feed: { url: rssUrl }, items };
-  };
-
-  const extractChannelIdFromFeedUrl = (feedUrl) => {
-    const m = String(feedUrl || "").match(/channel_id=(UC[a-zA-Z0-9_-]+)/);
-    return m?.[1] || "";
-  };
-
-  const resolveChannelId = async () => {
-    if (FALLBACK_CHANNEL_ID) return { channelId: FALLBACK_CHANNEL_ID, data: null };
-
-    // Intento 1: scrape del canal por handle (mejor para @handles)
-    const scraped = await getChannelIdFromHandle(HANDLE);
-    if (scraped) return { channelId: scraped, data: null };
-
-    // Intento 2 (legacy): algunos canales aún resuelven por ?user=
-    const legacyRss = `https://www.youtube.com/feeds/videos.xml?user=${encodeURIComponent(HANDLE)}`;
-    const data = await getFeedData(legacyRss);
-    const channelId = extractChannelIdFromFeedUrl(data?.feed?.url);
-    return { channelId, data };
-  };
-
-  const fetchSermones = async () => {
-    const cacheKey = `iccm_sermons_cache_${HANDLE}_${MAX_RESULTS}`;
-    const now = Date.now();
-
-    let cachedItems = [];
-    let cacheExpired = true;
-    let renderedFromCache = false;
-
-    // 1) Render inmediato desde cache (aunque esté expirado) para evitar pantalla vacía.
-    try {
-      const cachedRaw = localStorage.getItem(cacheKey);
-      if (cachedRaw) {
-        const cached = JSON.parse(cachedRaw);
-        if (Array.isArray(cached?.items) && cached.items.length) {
-          cachedItems = cached.items;
-          cacheExpired = !(cached?.expiresAt > now);
-          renderFeatured(cachedItems[0]);
-          renderCards(cachedItems.slice(1));
-          renderedFromCache = true;
-          setStatus(cacheExpired ? "Cargando los sermones más recientes…" : "Mostrando los sermones más recientes.");
-
-          // Si no está expirado, no golpeamos servicios terceros.
-          if (!cacheExpired) return;
-        }
-      }
-    } catch {
-      // ignore
-    }
-
-    if (!renderedFromCache) {
-      renderFeaturedSkeleton();
-      renderSkeletons(Math.max(0, MAX_RESULTS - 1));
-      setStatus("Cargando los sermones más recientes…");
-    }
-
-    const attemptFetch = async (attempt) => {
-      try {
-        const { channelId, data: fallbackData } = await resolveChannelId();
-
-        // Preferimos el RSS oficial por channel_id (más estable)
-        let feedData = fallbackData;
-        if (channelId) {
-          const officialRss = `https://www.youtube.com/feeds/videos.xml?channel_id=${encodeURIComponent(channelId)}`;
-          feedData = await getFeedData(officialRss);
-        } else {
-          const legacyRss = `https://www.youtube.com/feeds/videos.xml?user=${encodeURIComponent(HANDLE)}`;
-          feedData = await getFeedData(legacyRss);
-        }
-
-        const items = Array.isArray(feedData?.items) ? feedData.items.slice(0, MAX_RESULTS) : [];
-
-        if (!items.length) {
-          if (featuredEl) featuredEl.innerHTML = "";
-          grid.innerHTML = "";
-          setStatus("Aún no hay sermones para mostrar.");
-          return;
-        }
-
-        renderFeatured(items[0]);
-        renderCards(items.slice(1));
-        setStatus("Mostrando los sermones más recientes.");
-
-        try {
-          localStorage.setItem(
-            cacheKey,
-            JSON.stringify({
-              expiresAt: Date.now() + 30 * 60 * 1000, // 30 min
-              items
-            })
-          );
-        } catch {
-          // ignore
-        }
-      } catch {
-        const shouldRetry = attempt < RETRY_MAX;
-
-        if (renderedFromCache) {
-          setStatus(shouldRetry ? "Conexión inestable… reintentando." : "Mostrando mensajes guardados. No pudimos actualizar por ahora.");
-        } else {
-          setStatus(shouldRetry ? "Conexión inestable… reintentando." : "No pudimos cargar los sermones en este momento.");
-        }
-
-        if (!shouldRetry) {
-          if (!renderedFromCache) {
-            renderFallbackSermon();
-          }
-          return;
-        }
-
-        const jitter = Math.floor(Math.random() * 260);
-        const delay = RETRY_BASE_MS * Math.pow(2, attempt - 1) + jitter;
-        await sleep(delay);
-        return attemptFetch(attempt + 1);
-      }
-    };
-
-    await attemptFetch(1);
+  const init = () => {
+    renderStaticVideos();
   };
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", fetchSermones);
+    document.addEventListener("DOMContentLoaded", init);
   } else {
-    fetchSermones();
+    init();
   }
 })();
