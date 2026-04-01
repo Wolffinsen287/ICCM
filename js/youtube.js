@@ -1,15 +1,4 @@
-/*
-  Sermones con backend local en Hostinger
-  - NO usa YouTube Data API
-  - NO usa API keys
-  - Usa PHP local para obtener el feed de YouTube
-  - NO depende de proxies lentos desde el navegador
 
-  Estrategia:
-  1) Backend PHP solicita el feed oficial de YouTube
-  2) El frontend consume `/youtube-feed.php`
-  3) Renderiza el video destacado y la lista de videos más recientes
-*/
 
 (() => {
   "use strict";
@@ -19,30 +8,7 @@
   const FETCH_TIMEOUT_MS = 8000;
   const USE_MODAL = true;
   const CHANNEL_URL = `https://www.youtube.com/@${HANDLE}`;
-  const API_URL = "youtube-feed.php";
-
-  const FALLBACK_VIDEO_ITEMS = [
-    {
-      id: "5GSdmHkE0fI",
-      title: "El Reino de Dios desde las parábolas.",
-      date: "3 años"
-    },
-    {
-      id: "GgG8QIqS3Xc",
-      title: "Servicio de Adoración del 11 de Septiembre del 2022",
-      date: "3 años"
-    },
-    {
-      id: "FcJ8BwCne7k",
-      title: "Antídoto contra las preocupaciones.",
-      date: "3 años"
-    },
-    {
-      id: "9F28p-TR9h4",
-      title: "Mentalidad cristiana.",
-      date: "3 años"
-    }
-  ];
+  const API_URL = new URL("youtube-feed.php", window.location.href).href;
 
   const grid = document.getElementById("sermonsGrid");
   const statusEl = document.getElementById("sermonsStatus");
@@ -62,8 +28,6 @@
   const setStatus = (msg) => {
     statusEl.textContent = msg;
   };
-
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const fetchWithTimeout = async (url, options = {}, timeoutMs = FETCH_TIMEOUT_MS) => {
     const controller = new AbortController();
@@ -152,27 +116,39 @@
 
     featuredEl.innerHTML = `
       <article class="featured-card animate animate--up">
-        <button class="featured-card__media" type="button" aria-label="Ver último mensaje: ${safeTitle}">
+        <div class="featured-card__media" role="button" tabindex="0" aria-label="Ver último mensaje: ${safeTitle}">
           <img class="featured-card__img" src="${thumb}" alt="Miniatura del último mensaje: ${safeTitle}" loading="lazy" />
           <span class="featured-card__shade" aria-hidden="true"></span>
-          <div class="featured-card__content">
-            <span class="featured-card__badge" aria-hidden="true">Último mensaje</span>
-            <h3 class="featured-card__title">${safeTitle}</h3>
-            <p class="featured-card__meta">${escapeHtml(date)}</p>
-            <div class="featured-card__actions">
-              <a class="btn btn--primary btn--sm" href="${escapeHtml(link)}" target="_blank" rel="noreferrer">Ver ahora</a>
-              <a class="btn btn--ghost btn--sm" href="${escapeHtml(CHANNEL_URL)}" target="_blank" rel="noreferrer">Ver más</a>
-            </div>
+        </div>
+        <div class="featured-card__content">
+          <span class="featured-card__badge" aria-hidden="true">Último mensaje</span>
+          <h3 class="featured-card__title">${safeTitle}</h3>
+          <p class="featured-card__meta">${escapeHtml(date)}</p>
+          <div class="featured-card__actions">
+            <a class="btn btn--primary btn--sm" href="${escapeHtml(link)}" target="_blank" rel="noreferrer">Ver ahora</a>
+            <a class="btn btn--ghost btn--sm" href="${escapeHtml(CHANNEL_URL)}" target="_blank" rel="noreferrer">Ver más</a>
           </div>
-        </button>
+        </div>
       </article>
     `;
 
     const mediaBtn = featuredEl.querySelector(".featured-card__media");
-    if (USE_MODAL && mediaBtn && videoId) {
-      mediaBtn.addEventListener("click", () => openModal(videoId, title));
-    } else if (mediaBtn && link) {
-      mediaBtn.addEventListener("click", () => window.open(link, "_blank", "noopener,noreferrer"));
+    if (mediaBtn && videoId) {
+      const open = () => {
+        if (USE_MODAL) {
+          openModal(videoId, title);
+        } else {
+          window.open(link, "_blank", "noopener,noreferrer");
+        }
+      };
+
+      mediaBtn.addEventListener("click", open);
+      mediaBtn.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          open();
+        }
+      });
     }
 
     requestAnimationFrame(() => {
@@ -323,17 +299,18 @@
 
     try {
       const res = await fetchWithTimeout(API_URL, {
-        cache: "no-store",
         headers: { Accept: "application/json" }
       });
 
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status} ${res.statusText}`);
+      }
 
       const data = await res.json();
       const items = Array.isArray(data?.items) ? data.items.slice(0, MAX_RESULTS) : [];
 
       if (!items.length) {
-        throw new Error("No hay videos disponibles");
+        throw new Error(data?.error || "No hay videos disponibles");
       }
 
       renderFeatured(items[0]);
@@ -341,16 +318,9 @@
       setStatus("Mostrando los videos más recientes.");
       return;
     } catch (error) {
-      const fallback = Array.isArray(FALLBACK_VIDEO_ITEMS) ? FALLBACK_VIDEO_ITEMS.slice(0, MAX_RESULTS) : [];
-      if (fallback.length) {
-        renderFeatured(fallback[0]);
-        renderCards(fallback.slice(1));
-        setStatus("No se pudieron cargar los videos más recientes. Mostrando una selección local.");
-        return;
-      }
-
+      console.error("Error cargando videos de YouTube:", error);
       renderFallbackSermon();
-      setStatus("No pudimos cargar los videos en este momento.");
+      setStatus(`No se pudieron cargar los videos más recientes. ${error?.message || "Intenta de nuevo más tarde."}`);
     }
   };
 
