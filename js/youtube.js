@@ -33,7 +33,11 @@
 
   const RSS2JSON_V1 = "https://api.rss2json.com/v1/api.json?rss_url=";
   const RSS2JSON_LEGACY = "https://rss2json.com/api.json?rss_url=";
-  const ALLORIGINS_RAW = "https://api.allorigins.win/raw?url=";
+  const PROXY_ENDPOINTS = [
+    "https://api.allorigins.win/raw?url=",
+    "https://api.allorigins.win/get?url=",
+    "https://corsproxy.io/?"
+  ];
 
   const grid = document.getElementById("sermonsGrid");
   const statusEl = document.getElementById("sermonsStatus");
@@ -236,6 +240,28 @@
     });
   }
 
+  const renderFallbackSermon = () => {
+    if (!featuredEl || !grid) return;
+
+    featuredEl.innerHTML = `
+      <article class="featured-card animate animate--up">
+        <div class="featured-card__media featured-card__media--fallback" aria-hidden="true">
+          <img class="featured-card__img" src="images/sermon-placeholder.svg" alt="" loading="lazy" />
+        </div>
+        <div class="featured-card__content">
+          <span class="featured-card__badge" aria-hidden="true">Canal de YouTube</span>
+          <h3 class="featured-card__title">Visita nuestro canal de YouTube</h3>
+          <p class="featured-card__meta">Los mensajes se cargan mejor directamente desde YouTube.</p>
+          <div class="featured-card__actions">
+            <a class="btn btn--primary btn--sm" href="${escapeHtml(CHANNEL_URL)}" target="_blank" rel="noreferrer">Ver canal</a>
+          </div>
+        </div>
+      </article>
+    `;
+
+    grid.innerHTML = "";
+  };
+
   const renderCards = (items) => {
     grid.innerHTML = "";
 
@@ -299,9 +325,29 @@
     return await res.json();
   };
 
-  const fetchViaAllOrigins = async (targetUrl) => {
-    const url = `${ALLORIGINS_RAW}${encodeURIComponent(targetUrl)}`;
-    return await fetchText(url);
+  const fetchViaProxy = async (targetUrl) => {
+    for (const prefix of PROXY_ENDPOINTS) {
+      try {
+        const url = `${prefix}${encodeURIComponent(targetUrl)}`;
+        const res = await fetchWithTimeout(url, {
+          headers: { Accept: "text/plain, application/xml, text/xml, */*" }
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        if (prefix.endsWith("/get?url=")) {
+          const json = await res.json();
+          if (json?.contents) return json.contents;
+          throw new Error("Proxy response missing contents");
+        }
+
+        return await res.text();
+      } catch {
+        // try next proxy
+      }
+    }
+
+    throw new Error("No proxy available");
   };
 
   const rss2json = async (rssUrl, baseUrl) => {
@@ -352,8 +398,8 @@
   };
 
   const getChannelIdFromHandle = async (handle) => {
-    // YouTube no permite CORS directo; usamos AllOrigins para obtener el HTML.
-    const html = await fetchViaAllOrigins(`https://www.youtube.com/@${encodeURIComponent(handle)}`);
+    // YouTube no permite CORS directo; usamos un proxy público para obtener el HTML.
+    const html = await fetchViaProxy(`https://www.youtube.com/@${encodeURIComponent(handle)}`);
 
     // Varias formas posibles según el HTML:
     const patterns = [
@@ -385,8 +431,8 @@
       // ignore
     }
 
-    // 3) Fallback: XML directo vía AllOrigins
-    const xml = await fetchViaAllOrigins(rssUrl);
+    // 3) Fallback: XML directo vía proxy
+    const xml = await fetchViaProxy(rssUrl);
     const items = parseYouTubeRssXmlToItems(xml);
     return { status: "ok", feed: { url: rssUrl }, items };
   };
@@ -494,8 +540,7 @@
 
         if (!shouldRetry) {
           if (!renderedFromCache) {
-            if (featuredEl) featuredEl.innerHTML = "";
-            grid.innerHTML = "";
+            renderFallbackSermon();
           }
           return;
         }
