@@ -2139,3 +2139,101 @@ html.is-modal-open {
     will-change: auto;
   }
 }
+
+
+/* Semana Santa */
+
+.section--ss-bg .section__title,
+.section--ss-bg .section__lead {
+  color: white;
+}
+
+
+.section--ss-bg {
+  position: relative;
+  background: url("../images/semana-santa.png") center/cover no-repeat;
+  overflow: hidden;
+}
+
+/* Overlay oscuro para que el texto se vea */
+.section--ss-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(10, 25, 30, 0.85),
+    rgba(10, 25, 30, 0.9)
+  );
+  z-index: 0;
+}
+
+/* Asegura que el contenido esté arriba */
+.section--ss-bg .container {
+  position: relative;
+  z-index: 1;
+}
+
+.ss-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Cards base */
+.ss-card {
+  padding: 2rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #1e6f86, #144b5a);
+  color: white;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glow effect sutil */
+.ss-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(255,255,255,0.15), transparent);
+  opacity: 0;
+  transition: 0.3s;
+}
+
+/* Hover */
+.ss-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+}
+
+.ss-card:hover::before {
+  opacity: 1;
+}
+
+/* Texto */
+.ss-date {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.ss-card h3 {
+  margin: 1rem 0 0.5rem;
+  font-size: 1.4rem;
+}
+
+.ss-card p {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Evento destacado */
+.ss-card--highlight {
+  background: linear-gradient(135deg, #ff8c1a, #ff5e00);
+  transform: scale(1.05);
+}
+
+.ss-card--highlight:hover {
+  transform: scale(1.08);
+}

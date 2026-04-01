@@ -1,332 +1,122 @@
+const API_KEY = "AIzaSyDVQIfdvxY-v86N1iCQ2c3dhCsOk-A5fLw";
+const CHANNEL_ID = "UCSPkWjU1D1CkEYNQo1WX8sA";
 
 
-(() => {
-  "use strict";
+// Elementos del DOM (los que ya tienes en tu HTML)
+const featuredContainer = document.getElementById("featuredSermon");
+const gridContainer = document.getElementById("sermonsGrid");
+const statusText = document.getElementById("sermonsStatus");
+const moreBtn = document.getElementById("sermonsMoreBtn");
 
-  const HANDLE = "iglesiacristianacongregaci5798"; // del URL: https://www.youtube.com/@...
-  const MAX_RESULTS = 4;
-  const FETCH_TIMEOUT_MS = 8000;
-  const USE_MODAL = true;
-  const CHANNEL_URL = `https://www.youtube.com/@${HANDLE}`;
-  const API_URL = new URL("youtube-feed.php", window.location.href).href;
+// Obtener uploads playlist
+async function getUploadsPlaylist() {
+  const url = `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${CHANNEL_ID}&key=${API_KEY}`;
+  
+  const res = await fetch(url);
+  const data = await res.json();
 
-  const grid = document.getElementById("sermonsGrid");
-  const statusEl = document.getElementById("sermonsStatus");
+  return data.items[0].contentDetails.relatedPlaylists.uploads;
+}
 
-  const featuredEl = document.getElementById("featuredSermon");
-  const moreBtn = document.getElementById("sermonsMoreBtn");
+// Obtener videos
+async function loadSermons() {
+  try {
+    const playlistId = await getUploadsPlaylist();
 
-  const modal = document.getElementById("videoModal");
-  const modalFrame = document.getElementById("videoModalFrame");
+    const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=5&key=${API_KEY}`;
+    
+    const res = await fetch(url);
+    const data = await res.json();
 
-  if (!grid || !statusEl) return;
-
-  if (moreBtn) {
-    moreBtn.setAttribute("href", CHANNEL_URL);
-  }
-
-  const setStatus = (msg) => {
-    statusEl.textContent = msg;
-  };
-
-  const fetchWithTimeout = async (url, options = {}, timeoutMs = FETCH_TIMEOUT_MS) => {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-
-    try {
-      return await fetch(url, {
-        cache: "no-store",
-        ...options,
-        signal: controller.signal
-      });
-    } finally {
-      clearTimeout(timer);
-    }
-  };
-
-  const escapeHtml = (str) =>
-    String(str)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-
-  const capitalizeMonth = (formatted) => {
-    // "15 de enero de 2026" -> "15 de Enero de 2026"
-    // Mantiene el formato solicitado por el usuario.
-    const parts = String(formatted).split(" de ");
-    if (parts.length !== 3) return formatted;
-    const [day, month, year] = parts;
-    const monthCap = month ? month.charAt(0).toUpperCase() + month.slice(1) : month;
-    return `${day} de ${monthCap} de ${year}`;
-  };
-
-  const formatDateEs = (iso) => {
-    try {
-      const date = new Date(iso);
-      const formatted = date.toLocaleDateString("es-MX", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
-      });
-      return capitalizeMonth(formatted);
-    } catch {
-      return "";
-    }
-  };
-
-  const renderFeaturedSkeleton = () => {
-    if (!featuredEl) return;
-    featuredEl.innerHTML = `
-      <article class="featured-card featured-card--skeleton">
-        <div class="featured-card__img skeleton" style="height: clamp(280px, 45vw, 460px);"></div>
-      </article>
-    `;
-  };
-
-  const renderSkeletons = (count) => {
-    grid.innerHTML = "";
-
-    for (let i = 0; i < count; i += 1) {
-      const el = document.createElement("article");
-      el.className = "sermon-card sermon-card--skeleton";
-      el.innerHTML = `
-        <div class="sermon-card__img skeleton"></div>
-        <div class="sermon-card__body">
-          <div class="skeleton skeleton--title"></div>
-          <div class="skeleton skeleton--meta"></div>
-          <div class="skeleton skeleton--btn"></div>
-        </div>
-      `;
-      grid.appendChild(el);
-    }
-  };
-
-  const renderFeatured = (it) => {
-    if (!featuredEl) return;
-
-    const videoId = String(it?.id || extractVideoId(it));
-    const title = String(it?.title || "Mensaje");
-    const link = String(it?.link || (videoId ? `https://www.youtube.com/watch?v=${videoId}` : ""));
-    const date = String(it?.date || formatDateEs(it?.pubDate));
-    const thumb = it?.thumbnail || getThumbnailFromVideoId(videoId);
-
-    const safeTitle = escapeHtml(title);
-
-    featuredEl.innerHTML = `
-      <article class="featured-card animate animate--up">
-        <div class="featured-card__media" role="button" tabindex="0" aria-label="Ver último mensaje: ${safeTitle}">
-          <img class="featured-card__img" src="${thumb}" alt="Miniatura del último mensaje: ${safeTitle}" loading="lazy" />
-          <span class="featured-card__shade" aria-hidden="true"></span>
-        </div>
-        <div class="featured-card__content">
-          <span class="featured-card__badge" aria-hidden="true">Último mensaje</span>
-          <h3 class="featured-card__title">${safeTitle}</h3>
-          <p class="featured-card__meta">${escapeHtml(date)}</p>
-          <div class="featured-card__actions">
-            <a class="btn btn--primary btn--sm" href="${escapeHtml(link)}" target="_blank" rel="noreferrer">Ver ahora</a>
-            <a class="btn btn--ghost btn--sm" href="${escapeHtml(CHANNEL_URL)}" target="_blank" rel="noreferrer">Ver más</a>
-          </div>
-        </div>
-      </article>
-    `;
-
-    const mediaBtn = featuredEl.querySelector(".featured-card__media");
-    if (mediaBtn && videoId) {
-      const open = () => {
-        if (USE_MODAL) {
-          openModal(videoId, title);
-        } else {
-          window.open(link, "_blank", "noopener,noreferrer");
-        }
-      };
-
-      mediaBtn.addEventListener("click", open);
-      mediaBtn.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          open();
-        }
-      });
-    }
-
-    requestAnimationFrame(() => {
-      featuredEl.querySelectorAll(".animate").forEach((el) => el.classList.add("is-visible"));
-    });
-  };
-
-  const extractVideoId = (item) => {
-    if (item?.id) return String(item.id);
-
-    const link = String(item?.link || "");
-
-    // Prefer link query param v=
-    try {
-      const url = new URL(link);
-      const v = url.searchParams.get("v");
-      if (v) return v;
-    } catch {
-      // ignore
-    }
-
-    // Fallback: guid suele ser "yt:video:VIDEO_ID"
-    const guid = String(item?.guid || "");
-    const m = guid.match(/yt:video:([a-zA-Z0-9_-]{6,})/);
-    if (m?.[1]) return m[1];
-
-    return "";
-  };
-
-  const getThumbnailFromVideoId = (videoId) => {
-    // hqdefault es suficiente; YouTube entrega la mejor disponible.
-    return videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : "images/sermon-placeholder.svg";
-  };
-
-  const openModal = (videoId, title) => {
-    if (!modal || !modalFrame) return;
-
-    const safeTitle = escapeHtml(title || "Video");
-    modalFrame.innerHTML = `
-      <iframe
-        title="${safeTitle}"
-        width="100%"
-        height="100%"
-        src="https://www.youtube.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-        style="border:0;"
-      ></iframe>
-    `;
-
-    modal.setAttribute("aria-hidden", "false");
-    modal.classList.add("is-open");
-    document.documentElement.classList.add("is-modal-open");
-  };
-
-  const closeModal = () => {
-    if (!modal || !modalFrame) return;
-    modal.setAttribute("aria-hidden", "true");
-    modal.classList.remove("is-open");
-    modalFrame.innerHTML = "";
-    document.documentElement.classList.remove("is-modal-open");
-  };
-
-  if (modal) {
-    modal.addEventListener("click", (event) => {
-      const shouldClose = event.target?.closest("[data-modal-close]");
-      if (shouldClose) closeModal();
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") closeModal();
-    });
-  }
-
-  const renderFallbackSermon = () => {
-    if (!featuredEl || !grid) return;
-
-    featuredEl.innerHTML = `
-      <article class="featured-card animate animate--up">
-        <div class="featured-card__media featured-card__media--fallback" aria-hidden="true">
-          <img class="featured-card__img" src="images/sermon-placeholder.svg" alt="" loading="lazy" />
-        </div>
-        <div class="featured-card__content">
-          <span class="featured-card__badge" aria-hidden="true">Canal de YouTube</span>
-          <h3 class="featured-card__title">Visita nuestro canal de YouTube</h3>
-          <p class="featured-card__meta">Los mensajes se cargan mejor directamente desde YouTube.</p>
-          <div class="featured-card__actions">
-            <a class="btn btn--primary btn--sm" href="${escapeHtml(CHANNEL_URL)}" target="_blank" rel="noreferrer">Ver canal</a>
-          </div>
-        </div>
-      </article>
-    `;
-
-    grid.innerHTML = "";
-  };
-
-  const renderCards = (items) => {
-    grid.innerHTML = "";
-
-    items.forEach((it) => {
-      const videoId = String(it?.id || extractVideoId(it));
-      const title = String(it?.title || "Mensaje");
-      const link = String(it?.link || (videoId ? `https://www.youtube.com/watch?v=${videoId}` : ""));
-      const date = String(it?.date || formatDateEs(it?.pubDate));
-
-      const thumb = it?.thumbnail || getThumbnailFromVideoId(videoId);
-      const safeTitle = escapeHtml(title);
-
-      const card = document.createElement("article");
-      card.className = "sermon-card animate animate--up";
-      card.innerHTML = `
-        <button class="sermon-card__media" type="button" aria-label="Ver mensaje: ${safeTitle}">
-          <img class="sermon-card__img" src="${thumb}" alt="Miniatura del mensaje: ${safeTitle}" loading="lazy" />
-          <span class="sermon-card__overlay" aria-hidden="true"></span>
-          <span class="sermon-card__play" aria-hidden="true">Ver</span>
-        </button>
-        <div class="sermon-card__body">
-          <h3 class="sermon-card__title">${safeTitle}</h3>
-          <p class="sermon-card__meta">${escapeHtml(date)}</p>
-          <div class="sermon-card__actions">
-            <a class="btn btn--primary btn--sm" href="${escapeHtml(link)}" target="_blank" rel="noreferrer">
-              Ver mensaje
-            </a>
-          </div>
-        </div>
-      `;
-
-      const mediaBtn = card.querySelector(".sermon-card__media");
-      if (USE_MODAL && mediaBtn && videoId) {
-        mediaBtn.addEventListener("click", () => openModal(videoId, title));
-      } else if (mediaBtn && link) {
-        mediaBtn.addEventListener("click", () => window.open(link, "_blank", "noopener,noreferrer"));
-      }
-
-      grid.appendChild(card);
-    });
-
-    // Fade-in simple para contenido dinámico (sin depender de IntersectionObserver)
-    requestAnimationFrame(() => {
-      grid.querySelectorAll(".animate").forEach((el) => el.classList.add("is-visible"));
-    });
-  };
-
-  const fetchSermones = async () => {
-    renderFeaturedSkeleton();
-    renderSkeletons(Math.max(0, MAX_RESULTS - 1));
-    setStatus("Cargando los videos más recientes…");
-
-    try {
-      const res = await fetchWithTimeout(API_URL, {
-        headers: { Accept: "application/json" }
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status} ${res.statusText}`);
-      }
-
-      const data = await res.json();
-      const items = Array.isArray(data?.items) ? data.items.slice(0, MAX_RESULTS) : [];
-
-      if (!items.length) {
-        throw new Error(data?.error || "No hay videos disponibles");
-      }
-
-      renderFeatured(items[0]);
-      renderCards(items.slice(1));
-      setStatus("Mostrando los videos más recientes.");
+    if (!data.items || data.items.length === 0) {
+      statusText.textContent = "No se encontraron videos.";
       return;
-    } catch (error) {
-      console.error("Error cargando videos de YouTube:", error);
-      renderFallbackSermon();
-      setStatus(`No se pudieron cargar los videos más recientes. ${error?.message || "Intenta de nuevo más tarde."}`);
     }
-  };
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", fetchSermones);
-  } else {
-    fetchSermones();
+    displayVideos(data.items);
+    statusText.style.display = "none";
+
+    // Botón "ver más"
+    moreBtn.href = `https://www.youtube.com/channel/${CHANNEL_ID}/videos`;
+
+  } catch (error) {
+    console.error(error);
+    statusText.textContent = "Error al cargar los videos.";
   }
-})();
+}
+
+// Mostrar videos
+function displayVideos(videos) {
+  featuredContainer.innerHTML = "";
+  gridContainer.innerHTML = "";
+
+  // 🎯 PRIMER VIDEO (DESTACADO)
+  const firstVideo = videos[0];
+  const firstId = firstVideo.snippet.resourceId.videoId;
+
+  featuredContainer.innerHTML = `
+    <iframe 
+      src="https://www.youtube.com/embed/${firstId}" 
+      frameborder="0" 
+      allowfullscreen
+      width="100%" 
+      height="400">
+    </iframe>
+  `;
+
+  // 🎯 LOS OTROS 4 VIDEOS
+  videos.slice(1, 4).forEach(video => {
+    const videoId = video.snippet.resourceId.videoId;
+    const title = video.snippet.title;
+    const thumbnail = video.snippet.thumbnails.medium.url;
+
+    const card = document.createElement("div");
+    card.classList.add("sermon-card");
+
+    card.innerHTML = `
+      <div class="sermon-card__thumb">
+        <img src="${thumbnail}" alt="${title}">
+      </div>
+      <h4 class="sermon-card__title">${title}</h4>
+    `;
+
+    // 👉 click abre video en modal
+    card.addEventListener("click", () => openVideoModal(videoId));
+
+    gridContainer.appendChild(card);
+  });
+}
+
+// 🎬 MODAL
+function openVideoModal(videoId) {
+  const modal = document.getElementById("videoModal");
+  const frame = document.getElementById("videoModalFrame");
+
+  frame.innerHTML = `
+    <iframe 
+      src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+      frameborder="0" 
+      allowfullscreen 
+      width="100%" 
+      height="400">
+    </iframe>
+  `;
+
+  modal.classList.add("active");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+// cerrar modal
+document.querySelectorAll("[data-modal-close]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const modal = document.getElementById("videoModal");
+    const frame = document.getElementById("videoModalFrame");
+
+    modal.classList.remove("active");
+    modal.setAttribute("aria-hidden", "true");
+    frame.innerHTML = "";
+  });
+});
+
+// iniciar
+loadSermons();
