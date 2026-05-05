@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Leer devocional — ICCM</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="devocionales-app">
+  <header class="site-header">
+    <nav class="nav is-scrolled" aria-label="Navegación principal">
+      <div class="container nav__inner">
+        <a class="nav__brand" href="../index.html" aria-label="Ir a inicio">
+          <img class="nav__logo" src="../images/ICCMLogo.jpg" alt="Logo ICCM" width="44" height="44" />
+          <span class="nav__title">ICCMazatlán</span>
+        </a>
+
+        <button class="nav__toggle" type="button" aria-label="Abrir menú" aria-controls="navMenu" aria-expanded="false">
+          <span class="nav__toggle-lines" aria-hidden="true"></span>
+        </button>
+
+        <div class="nav__menu" id="navMenu">
+          <ul class="nav__links">
+            <li><a class="nav__link" href="index.html">Devocionales</a></li>
+            <li><a class="nav__link" href="../index.html">Volver al sitio</a></li>
+            <li class="nav__auth">
+              <a id="nav-login-btn" class="btn btn--primary btn--sm" href="login.html">Iniciar sesión</a>
+              <a id="nav-profile-btn" class="btn btn--ghost btn--sm hidden" href="perfil.html">Perfil</a>
+              <button id="nav-logout-btn" class="btn btn--ghost btn--sm hidden" type="button">Cerrar sesión</button>
+            </li>
+            <li class="nav__cta"><a class="btn btn--primary btn--sm" href="#list">Explorar</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div id="spinner" class="empty-state">Cargando...</div>
+    <article id="devocional" class="dev-article card">
+      <header>
+        <h1 id="title" class="dev-title"></h1>
+        <div id="meta" class="dev-meta"></div>
+        <div id="author" class="dev-meta"></div>
+      </header>
+
+      <section id="scripture" class="dev-scripture" aria-live="polite"></section>
+
+      <div id="image" style="margin-top:.8rem"></div>
+
+      <div id="body" class="dev-body"></div>
+
+      <div style="margin-top:12px" class="controls">
+        <button id="mark-read" class="button button--primary">Marcar como leído</button>
+        <button id="share" class="button button--muted">Compartir</button>
+        <a id="back" href="index.html" class="button button--ghost">Volver</a>
+      </div>
+
+      <div id="notes-section" class="note-panel">
+        <h4>Tus notas</h4>
+        <textarea id="note-editor" class="note-editor" placeholder="Escribe tus notas personales sobre este devocional..."></textarea>
+        <div class="note-toolbar">
+          <div id="note-status" class="note-status">Sin cambios</div>
+          <div>
+            <button id="save-note" class="note-save">Guardar</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="nav-prevnext" style="margin-top:12px"></div>
+    </article>
+  </main>
+
+  <script type="module" src="../js/devocionales.js"></script>
+</body>
+</html>

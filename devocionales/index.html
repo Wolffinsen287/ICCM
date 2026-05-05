@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Devocionales — ICCM</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="devocionales-app">
+  <a class="skip-link" href="#inicio">Saltar al contenido</a>
+
+  <header class="site-header" id="top">
+    <nav class="nav" aria-label="Navegación principal">
+      <div class="container nav__inner">
+        <a class="nav__brand" href="../index.html" aria-label="Ir a inicio">
+          <img class="nav__logo" src="../images/ICCMLogo.jpg" alt="Logo ICCM" width="44" height="44" />
+          <span class="nav__title">ICCMazatlán</span>
+        </a>
+
+        <button class="nav__toggle" type="button" aria-label="Abrir menú" aria-controls="navMenu" aria-expanded="false">
+          <span class="nav__toggle-lines" aria-hidden="true"></span>
+        </button>
+
+        <div class="nav__menu" id="navMenu">
+          <ul class="nav__links">
+            <li><a class="nav__link" href="index.html">Devocionales</a></li>
+            <li><a class="nav__link" href="../index.html">Volver al sitio</a></li>
+            <li class="nav__auth">
+              <a id="nav-login-btn" class="btn btn--primary btn--sm" href="login.html">Iniciar sesión</a>
+              <a id="nav-profile-btn" class="btn btn--ghost btn--sm hidden" href="perfil.html">Perfil</a>
+              <button id="nav-logout-btn" class="btn btn--ghost btn--sm hidden" type="button">Cerrar sesión</button>
+            </li>
+            <li class="nav__cta"><a class="btn btn--primary btn--sm" href="#list">Explorar</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <section class="hero" id="inicio" aria-label="Sección principal">
+      <div class="hero__bg" role="img" aria-label="Imagen de fondo" style="background-image:url('../images/Devo.png')"></div>
+      <div class="hero__overlay" aria-hidden="true"></div>
+
+      <div class="container hero__content">
+        <p class="hero__eyebrow">Devocionales</p>
+        <h1 class="hero__headline">Lecturas diarias para edificar tu fe</h1>
+        <p class="hero__subhead">Momentos breves para acercarte a la Palabra cada día.</p>
+
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#list">Explorar devocionales</a>
+          <a id="hero-login-btn" class="btn btn--ghost" href="login.html">Iniciar sesión</a>
+        </div>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section>
+      <div id="spinner" class="empty-state">Cargando devocionales...</div>
+      <div id="empty-state" class="empty-state hidden">No hay devocionales publicados todavía.</div>
+      <div id="list" class="dev-list" role="list"></div>
+      <div id="pagination" class="pagination"></div>
+    </section>
+  </main>
+
+  <a id="fab-new" class="fab" href="admin.html" title="Nuevo devocional" style="display:none">+</a>
+
+  <footer class="devocionales-footer">ICCM Mazatlán — <a href="../index.html">Volver al sitio</a></footer>
+
+  <script type="module" src="../js/devocionales.js"></script>
+</body>
+</html>

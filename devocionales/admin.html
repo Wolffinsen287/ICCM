@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin — Devocionales</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .panel{max-width:1100px;margin:0 auto;padding:1rem}
+    .admin-grid{display:grid;grid-template-columns:1fr;gap:1rem}
+    @media(min-width:980px){ .admin-grid{grid-template-columns: 1fr 420px;} }
+    .card.form-card{ padding:16px; border-radius:12px; }
+    label{font-size:0.95rem;color:var(--c-muted);display:block;margin-bottom:6px}
+    input,textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid var(--c-border-soft);background:var(--c-surface-2);color:var(--c-text)}
+    .controls-row{display:flex;gap:.6rem;margin-top:.6rem}
+    .image-drop{border:1px dashed var(--c-border-soft);border-radius:10px;padding:10px;text-align:center;background:var(--c-surface);cursor:pointer}
+    .image-drop img{max-width:100%;border-radius:8px;margin-top:.5rem}
+    .button{background:var(--c-primary);color:white;padding:8px 12px;border-radius:8px;text-decoration:none;border:none}
+    .button--muted{background:transparent;border:1px solid var(--c-border-soft);color:var(--c-text)}
+    /* Admin status box */
+    #admin-status{margin-top:12px; display:inline-block; padding:10px 14px; border-radius:10px; font-weight:600; font-size:0.95rem}
+    .admin-status--ok { background: rgba(46,125,82,0.08); color: #165c3a; }
+    .admin-status--warn { background: rgba(244,181,12,0.06); color: #7a4f00; }
+    .admin-status--error { background: rgba(226,85,85,0.06); color: #7a1e1e; }
+    .admin-status--neutral { background: rgba(15,61,94,0.04); color: var(--c-text); }
+
+    /* Admin list table */
+    #admin-list{padding:12px}
+    #admin-list table{ width:100%; border-collapse:collapse; }
+    #admin-list thead th{ text-align:left; padding:10px 12px; color:var(--c-muted); font-weight:700 }
+    #admin-list td{ padding:10px 12px; border-bottom:1px solid var(--c-border-soft); vertical-align:middle }
+    #admin-list td:last-child{ white-space:nowrap }
+    #admin-list .button{ padding:.4rem .6rem; font-size:.9rem; border-radius:8px; margin-right:8px; min-width:92px }
+    #admin-list .button--danger{ background:#e25555; color:white }
+    #admin-list .button--secondary{ background:transparent; border:1px solid var(--c-border-soft); color:var(--c-text) }
+
+    /* Small responsive tweaks */
+    @media(max-width:720px){ .admin-grid{ grid-template-columns: 1fr } #admin-list td{ display:block } #admin-list td:last-child{ margin-top:8px } }
+  </style>
+</head>
+<body class="devocionales-app">
+  <header class="site-header">
+    <nav class="nav" aria-label="Navegación principal">
+      <div class="container nav__inner">
+        <a class="nav__brand" href="../index.html" aria-label="Ir a inicio">
+          <img class="nav__logo" src="../images/ICCMLogo.jpg" alt="Logo ICCM" width="44" height="44" />
+          <span class="nav__title">ICCMazatlán</span>
+        </a>
+
+        <button class="nav__toggle" type="button" aria-label="Abrir menú" aria-controls="navMenu" aria-expanded="false">
+          <span class="nav__toggle-lines" aria-hidden="true"></span>
+        </button>
+
+        <div class="nav__menu" id="navMenu">
+          <ul class="nav__links">
+            <li><a class="nav__link" href="index.html">Devocionales</a></li>
+            <li><a id="nav-perfil" class="nav__link" href="perfil.html">Mi Perfil</a></li>
+            <li><a class="nav__link" href="../index.html">Volver al sitio</a></li>
+            <li class="nav__auth">
+              <a id="nav-login-btn" class="btn btn--primary btn--sm" href="login.html">Iniciar sesión</a>
+              <a id="nav-profile-btn" class="btn btn--ghost btn--sm hidden" href="perfil.html">Perfil</a>
+              <button id="nav-logout-btn" class="btn btn--ghost btn--sm hidden" type="button">Cerrar sesión</button>
+            </li>
+            <li class="nav__cta"><a class="btn btn--primary btn--sm" href="#list">Explorar</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+    <div class="panel">
+    <h2>Panel de administración — Devocionales</h2>
+    <div id="admin-panel" class="admin-grid admin-panel">
+      <form id="dev-form" class="card form-card">
+        <input type="hidden" id="editingId" />
+        <label for="title">Título</label>
+        <input id="title" required />
+
+        <div style="display:grid;grid-template-columns:1fr 150px;gap:.6rem">
+          <div>
+            <label for="date">Fecha</label>
+            <input id="date" type="date" required />
+          </div>
+          <div>
+            <label for="published">Publicado</label>
+            <select id="published"><option value="true">Sí</option><option value="false">No (borrador)</option></select>
+          </div>
+        </div>
+
+        <label for="ref">Referencia (ej. Juan 3:16)</label>
+        <input id="ref" />
+
+        <label for="scripture_text">Texto de la Escritura</label>
+        <textarea id="scripture_text" rows="3"></textarea>
+
+        <label for="body">Cuerpo (HTML permitido: <b>negrita</b>, <i>cursiva</i>)</label>
+        <textarea id="body" rows="6"></textarea>
+
+        <label>Imagen (opcional)</label>
+        <div id="image-drop" class="image-drop">
+          <div>Arrastra una imagen aquí o haz clic para seleccionar</div>
+          <input id="image" type="file" accept="image/*" style="opacity:0;position:absolute;left:-9999px;" />
+          <div id="image-preview"></div>
+        </div>
+
+        <div class="controls-row">
+          <button id="save" type="button" class="button">Publicar / Guardar</button>
+          <button id="clear" type="button" class="button button--muted">Limpiar</button>
+        </div>
+      </form>
+
+      <aside>
+        <div id="admin-status" role="status" aria-live="polite"></div>
+        <h3 style="margin-top:12px">Devocionales existentes</h3>
+        <div id="admin-list">Cargando...</div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    // Small helper: image drag/drop preview (keeps input id 'image' for existing JS)
+    (function(){
+      const drop = document.getElementById('image-drop');
+      const input = document.getElementById('image');
+      const preview = document.getElementById('image-preview');
+      if (!drop || !input) return;
+      drop.addEventListener('click', ()=> input.click());
+      input.addEventListener('change', ()=>{
+        const f = input.files && input.files[0];
+        if (!f) return; const url = URL.createObjectURL(f); preview.innerHTML = `<img src="${url}" alt="preview"/>`;
+      });
+      drop.addEventListener('dragover', (e)=>{ e.preventDefault(); drop.style.opacity = '0.9'; });
+      drop.addEventListener('dragleave', ()=>{ drop.style.opacity = ''; });
+      drop.addEventListener('drop', (e)=>{ e.preventDefault(); drop.style.opacity = ''; const f = e.dataTransfer.files && e.dataTransfer.files[0]; if (f){ const dt = new DataTransfer(); dt.items.add(f); input.files = dt.files; const url = URL.createObjectURL(f); preview.innerHTML = `<img src="${url}" alt="preview"/>`; } });
+    })();
+  </script>
+
+  <script type="module" src="../js/devocionales.js"></script>
+</body>
+</html>

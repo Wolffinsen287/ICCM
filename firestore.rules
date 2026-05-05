@@ -1,0 +1,34 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Colección de devocionales
+    match /devocionales/{docId} {
+      // Cualquiera puede leer devocionales publicados.
+      // Los admins también pueden leer (y hacer todo).
+      allow read: if resource.data.published == true
+                  || (request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
+      allow create, update, delete: if request.auth != null
+                                   && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Documentos de usuario
+    match /users/{userId} {
+      // El usuario autenticado puede crear su propio doc (role inicialmente "member")
+      allow create: if request.auth != null && request.auth.uid == userId && request.resource.data.role == 'member';
+      // Sólo el propietario puede leer su documento
+      allow read: if request.auth != null && request.auth.uid == userId;
+      // El propietario puede actualizar su doc pero no cambiar su propio `role`.
+      // Un admin puede actualizar cualquier usuario.
+      allow update: if request.auth != null && (
+        (request.auth.uid == userId && request.resource.data.role == resource.data.role) ||
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+      allow delete: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+
+      // Notas del usuario: permitir que el propietario lea/escriba sus notas
+      match /notes/{noteId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+  }
+}

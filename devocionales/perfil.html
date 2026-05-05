@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mi Perfil — Devocionales</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="devocionales-app">
+  
+
+  <header class="site-header">
+    <nav class="nav is-scrolled" aria-label="Navegación principal">
+      <div class="container nav__inner">
+        <a class="nav__brand" href="../index.html" aria-label="Ir a inicio">
+          <img class="nav__logo" src="../images/ICCMLogo.jpg" alt="Logo ICCM" width="44" height="44" />
+          <span class="nav__title">ICCMazatlán</span>
+        </a>
+
+        <button class="nav__toggle" type="button" aria-label="Abrir menú" aria-controls="navMenu" aria-expanded="false">
+          <span class="nav__toggle-lines" aria-hidden="true"></span>
+        </button>
+
+        <div class="nav__menu" id="navMenu">
+          <ul class="nav__links">
+            <li><a class="nav__link" href="index.html">Devocionales</a></li>
+            <li><a class="nav__link" href="../index.html">Volver al sitio</a></li>
+            <li class="nav__auth">
+              <a id="nav-login-btn" class="btn btn--primary btn--sm" href="login.html">Iniciar sesión</a>
+              <a id="nav-profile-btn" class="btn btn--ghost btn--sm hidden" href="perfil.html">Perfil</a>
+              <button id="nav-logout-btn" class="btn btn--ghost btn--sm hidden" type="button">Cerrar sesión</button>
+            </li>
+            <li class="nav__cta"><a class="btn btn--primary btn--sm" href="#list">Explorar</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="profile" class="devoc-profile" role="main">
+    <div class="container" style="max-width:1100px;">
+      <section class="profile-header" aria-labelledby="profile-title">
+        <div class="profile-header__left">
+          <div id="avatar" class="avatar">JD</div>
+          <div>
+            <h1 id="profile-title" class="profile-name">Cargando...</h1>
+            <div id="profile-email" class="muted">&nbsp;</div>
+            <div id="profile-since" class="muted" style="font-size:0.9rem;margin-top:6px"></div>
+          </div>
+        </div>
+        <div class="profile-header__actions">
+          
+        </div>
+      </section>
+
+      <section class="profile-stats" aria-label="Estadísticas">
+        <div class="stats-grid">
+          <div class="stat card">
+            <div class="stat-num" id="stat-read">—</div>
+            <div class="stat-label">Total leídos</div>
+          </div>
+          <div class="stat card">
+            <div class="stat-num" id="stat-streak">—</div>
+            <div class="stat-label">Racha actual</div>
+          </div>
+          <div class="stat card">
+            <div class="stat-num" id="stat-week">—</div>
+            <div class="stat-label">Esta semana</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="continue" class="continue-reading hidden">
+        <!-- Filled by JS if user has recent reading -->
+      </section>
+
+      <section class="card-section">
+        <div class="card">
+          <h3>Historial de lectura</h3>
+          <div id="history">Cargando...</div>
+        </div>
+      </section>
+
+      <section class="card-section">
+        <div class="card">
+          <h3>✏ Mis notas guardadas</h3>
+          <div id="notes">Cargando notas...</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="../js/devocionales.js"></script>
+</body>
+</html>
